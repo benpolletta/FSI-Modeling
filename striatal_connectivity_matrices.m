@@ -57,18 +57,22 @@ syn_reverse_indicator = syn_indicator & ~syn_bi_indicator & ~syn_forward_indicat
 
 % Retrieving which pairs of cells are involved.
 gj_pairs = [forward_pairs(gj_bi_indicator | gj_forward_indicator,:); reverse_pairs(gj_bi_indicator | gj_reverse_indicator,:)];
+no_gjs = size(gj_pairs,1);
 syn_pairs = [forward_pairs(syn_bi_indicator | syn_forward_indicator,:); reverse_pairs(syn_bi_indicator | syn_reverse_indicator,:)];
+no_syns = size(syn_pairs,1);
 
 % Making connectivity matrices.
 CG = zeros(no_cells);
 CS = zeros(no_cells);
 
-for g = 1:size(gj_pairs,1)
-    CG(gj_pairs(g,2),gj_pairs(g,1)) = 1;
+g_gj = rand(no_gjs,1) + 1; % Random gap junction conductance between 1 and 2 nS.
+for g = 1:no_gjs
+    CG(gj_pairs(g,2),gj_pairs(g,1)) = g_gj(g);
 end
 
-for s = 1:size(syn_pairs,1)
-    CS(syn_pairs(s,2),syn_pairs(s,1)) = 1;
+g_s = 10*rand(no_syns,1) + 5;
+for s = 1:no_syns
+    CS(syn_pairs(s,2),syn_pairs(s,1)) = g_s(s);
 end
     
 end
