@@ -1,53 +1,64 @@
-function Golomb_2007_theta_m_gD_sweep(theta_m_vec,gD_vec,I_app_mat)
+function Golomb_2007_theta_m_gD_sweep(theta_m_mat,gD_mat,I_app_mat)
 
 T0 = 2000;
 dt = 0.005;                       %The time step.
 T  = ceil(T0/dt);
 t = (1:T)*dt;
 
-no_theta_m = length(theta_m_vec);
-no_gD = length(gD_vec);
+[rtm, ctm] = size(theta_m_mat);
 
-if isempty(I_app_mat)
-   
-    I_app_mat=4*ones(no_gD,no_theta_m);
+[rgd, cgd] = size(gD_mat);
+
+[ria, cia] = size(I_app_mat);
+
+if ~(rtm==rgd && rgd==ria) || ~(ctm==cgd && cgd==cia)
     
-elseif size(I_app_mat,1)~=no_gD || size(I_app_mat,2)~=no_theta_m
-    
-    display('I_app_vec must have dimensions length(gD_vec) x length(theta_m_vec).')
+    display('All three input matrices must have the same dimensions.')
     
     return
     
+else
+    
+    rows = rtm; columns = ctm;
+    
 end
 
-VS = nan(T,no_gD,no_theta_m);
+VS = nan(T,rows,columns);
+yticklabels = cell(rows,columns);
 
-for tvar=1:no_theta_m
+for rvar=1:rows
     
-    theta_m=theta_m_vec(tvar);
-    
-    parfor gDvar=1:no_gD
+    parfor cvar=1:columns
         
-        gD_vec_local=gD_vec;
+        [Vs_temp,~,~,~,~,~] = Golomb_2007(1,I_app_mat(rvar,cvar),T0,theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
         
-%         index = no_gD*(tvar-1) + gDvar;
-
-        index = no_theta_m*gDvar-tvar+1;
+        VS(:,rvar,cvar) = Vs_temp;
         
-        [Vs_temp,~,~,~,~,~] = Golomb_2007(1,I_app_mat(gDvar,tvar),T0,theta_m,gD_vec_local(gDvar));
-        
-        VS(:,gDvar,tvar) = Vs_temp;
+        yticklabels{rvar,cvar} = sprintf('I_a = %.2g, th_m = %.2g, g_D = %.2g',I_app_mat(rvar,cvar),theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
         
     end
     
 end
 
-for tvar = 1:no_theta_m
+date_string = datestr(now,'dd-mm-yy_HH-MM-SS');
 
-    ax_handle = subplot(no_theta_m,1,no_theta_m-tvar+1);
+try
     
-    plot_imf_1axis(VS(:,:,tvar)',t,['\theta_m = ',num2str(theta_m_vec(tvar))],[],ax_handle,'b');
+    for cvar = 1:columns
+        
+        ax_handle = subplot(1,columns,cvar);
+        
+        plot_mat_1axis(VS(:,:,cvar)',t,struct('title','Golomb 2007 Model FSI','xlabel','Time (ms)','ylabel','Parameters','yticklabel',{yticklabels(:,cvar)}),[],ax_handle,'b');
+        
+    end
+    
+    save_as_pdf(gcf,['Golomb_2007_sweep_theta_m_gD_',date_string])
+
+catch error
+    
+    display(['Could not plot figure: ',error.message])
+    save(['Golomb_2007_sweep_theta_m_gD_',date_string,'_error.mat'],'error')
     
 end
 
-save(['Golomb_2007_sweep',num2str(10*rand)],'VS','theta_m_vec','gD_vec','I_app_mat')
+save(['Golomb_2007_sweep_theta_m',date_string,'.mat'],'VS','theta_m_mat','gD_mat','I_app_mat','t')
