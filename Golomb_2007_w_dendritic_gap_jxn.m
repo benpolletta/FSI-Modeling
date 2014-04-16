@@ -11,9 +11,9 @@
 %  s = inhibitory synapse.
 %  t = time axis vector (useful for plotting).
 
-function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,theta_m,gD)
+function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,theta_m,gD_in,gG_multiplier,gS_multiplier)
              
-  gD = 2*gD;                        %Doubling conductances to account for dendrite.
+  gD = 2*gD_in;                        %Doubling conductances to account for dendrite.
 
   dt = 0.005;                       %The time step.
   T  = ceil(T0/dt);
@@ -55,7 +55,20 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   I_on=100;%7*rand(no_cells,1);
   
   [CS,CG] = striatal_connectivity_matrices(no_cells,1);
-  CS = CS/10; CG = 2*CG;
+  
+  if nargin == 6
+  
+      CG = gG_multiplier*CG;
+      
+  elseif nargin < 6
+      
+      CG = 2*CG;
+      
+  elseif nargin > 6
+      
+      CS = gS_multiplier*CS;
+  
+  end
   
   for i=1:T-1      %Integrate the equations.
 
@@ -76,9 +89,9 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   
   save_as_pdf(gcf,['Golomb_2007_w_dendritic_gj_',date_string])
   
-  save(['Golomb_2007_w_dendritic_gj_',date_string,'.mat'],'Vs','Vd','h','n','a','b','s','t','CS','CG','I0','theta_m','gD')
+  save(['Golomb_2007_w_dendritic_gj_',date_string,'.mat'],'Vs','Vd','h','n','a','b','s','t','CS','CG','I0','theta_m','gD_in')
   
-  label_struct = struct('title',sprintf('Voltage Curves, theta_m = %g, g_D = %g',theta_m,gD),'xlabel','Time (ms)','ylabel','Cell Number','yticklabel',1:no_cells);
+  label_struct = struct('title',sprintf('Voltage Curves, theta_m = %g, g_D = 2*%g',theta_m,gD_in),'xlabel','Time (ms)','ylabel','Cell Number','yticklabel',1:no_cells);
   
   plot_mat_1axis(Vs,t,label_struct,[],[],'k')
   

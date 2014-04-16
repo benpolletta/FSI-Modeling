@@ -97,7 +97,7 @@ if no_cells > 1
     % Making connectivity matrix.
     CS = zeros(no_cells);
     
-    g_s = 10*rand(no_syns,1) + 5; % Random synaptic conductance between 5 and 15 nS.
+    g_s = 4*rand(no_syns,1) + 1; % Random synaptic conductance between 1 and 5 nS.
     for s = 1:no_syns
         CS(syn_pairs(s,2),syn_pairs(s,1)) = g_s(s);
     end
@@ -110,11 +110,11 @@ if no_cells > 1
         subplot(1,2,1), imagesc(CS), title('Synaptic Connectivity Matrix'), colorbar
         subplot(1,2,2), imagesc(CG), title('Gap Junction Connectivity Matrix'), colorbar
         
-        m_p_gj = sum(sum(CG>0))/(100^2);
-        m_p_syn = sum(sum(triu(CS>0 | CS'>0)))/nchoosek(100,2);
-        m_p_both = sum(sum(triu(CG>0 & (CS>0 | CS'>0))))/nchoosek(100,2);
-        m_p_syn_only = sum(sum(triu(CG==0 & (CS>0 | CS'>0))))/nchoosek(100,2);
-        m_p_gj_only = sum(sum(triu(CG>0 & ~(CS>0 | CS'>0))))/nchoosek(100,2);
+        m_p_gj = sum(sum(CG>0))/(no_cells^2);
+        m_p_syn = sum(sum(triu(CS>0 | CS'>0)))/nchoosek(no_cells,2);
+        m_p_both = sum(sum(triu(CG>0 & (CS>0 | CS'>0))))/nchoosek(no_cells,2);
+        m_p_syn_only = sum(sum(triu(CG==0 & (CS>0 | CS'>0))))/nchoosek(no_cells,2);
+        m_p_gj_only = sum(sum(triu(CG>0 & ~(CS>0 | CS'>0))))/nchoosek(no_cells,2);
         m_mean_gj_diff = mean(mean(abs(CG-CG')));
         
         fprintf('\t Expected: \t Measured: \n')
