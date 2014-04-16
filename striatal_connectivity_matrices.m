@@ -1,4 +1,4 @@
-function [CS,CG] = striatal_connectivity_matrices(no_cells,plot_opt)
+function [CS,CG] = striatal_connectivity_matrices(no_cells,plot_opt,sum_opt)
 
 % Constructs synaptic and gap junctional connectivity matrices for FSI networks,
 % according to percentages of connections reported in Russo & Taverna 2012.
@@ -109,6 +109,10 @@ if no_cells > 1
         figure;
         subplot(1,2,1), imagesc(CS), title('Synaptic Connectivity Matrix'), colorbar
         subplot(1,2,2), imagesc(CG), title('Gap Junction Connectivity Matrix'), colorbar
+        
+    end
+    
+    if sum_opt > 0
         
         m_p_gj = sum(sum(CG>0))/(no_cells^2);
         m_p_syn = sum(sum(triu(CS>0 | CS'>0)))/nchoosek(no_cells,2);

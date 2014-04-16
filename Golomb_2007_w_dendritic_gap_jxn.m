@@ -54,12 +54,16 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   s(:,1)=0.0 + 0.1*rand(no_cells,1);
   I_on=100;%7*rand(no_cells,1);
   
-  [CS,CG] = striatal_connectivity_matrices(no_cells,1);
+  [CS,CG] = striatal_connectivity_matrices(no_cells,0,1);
   
   if nargin == 6
   
-      CG = gG_multiplier*CG;
+      if ~isempty(gG_multiplier)
       
+        CG = gG_multiplier*CG;
+      
+      end
+        
   elseif nargin < 6
       
       CG = 2*CG;
@@ -87,6 +91,9 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   
   date_string = datestr(now,'dd-mm-yy_HH-MM-SS');
   
+  figure;
+  subplot(1,2,1), imagesc(CS), title('Synaptic Connectivity Matrix'), colorbar
+  subplot(1,2,2), imagesc(CG), title('Gap Junction Connectivity Matrix'), colorbar
   save_as_pdf(gcf,['Golomb_2007_w_dendritic_gj_',date_string])
   
   save(['Golomb_2007_w_dendritic_gj_',date_string,'.mat'],'Vs','Vd','h','n','a','b','s','t','CS','CG','I0','theta_m','gD_in')
