@@ -56,20 +56,27 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   
   [CS,CG] = striatal_connectivity_matrices(no_cells,0,1);
   
-  if nargin == 6
+  if nargin >= 6
   
       if ~isempty(gG_multiplier)
       
         CG = gG_multiplier*CG;
+        
+      else
+          
+        CG = 2*CG;
       
       end
         
   elseif nargin < 6
       
       CG = 2*CG;
+       
+  end
       
-  elseif nargin > 6
+  if nargin > 6
       
+     
       CS = gS_multiplier*CS;
   
   end
@@ -77,7 +84,7 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   for i=1:T-1      %Integrate the equations.
 
       Vs(:,i+1) = Vs(:,i) + dt*(gNa*(steady(Vs(:,i),theta_m,sigma_m).^3).*h(:,i).*(ENa-Vs(:,i)) + gK*(n(:,i).^2).*(EK-Vs(:,i)) ...
-          + gD*a(:,i).^3.*b(:,i).*(EK-(Vs(:,i)+65)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) ...
+          + gD*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) ...
           + CS*s(:,i).*(-80-Vs(:,i)) + g_sd*(Vd(:,i)-Vs(:,i)));                                                             %Update I-cell voltage of soma.
       Vd(:,i+1) = Vd(:,i) + dt*(g_sd*(Vs(:,i)-Vd(:,i)) + (CG*diag(Vd(:,i))-diag(Vd(:,i))*CG)*ones(no_cells,1));             %Update I-cell voltage of dendrite.
       h(:,i+1) = h(:,i) + dt*((steady(Vs(:,i),theta_h,sigma_h)-h(:,i))./tau_h(Vs(:,i)));                                        %Update h.
@@ -94,7 +101,7 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   figure;
   subplot(1,2,1), imagesc(CS), title('Synaptic Connectivity Matrix'), colorbar
   subplot(1,2,2), imagesc(CG), title('Gap Junction Connectivity Matrix'), colorbar
-  save_as_pdf(gcf,['Golomb_2007_w_dendritic_gj_',date_string])
+  save_as_pdf(gcf,['Golomb_2007_w_dendritic_gj_',date_string,'_connectivity'])
   
   save(['Golomb_2007_w_dendritic_gj_',date_string,'.mat'],'Vs','Vd','h','n','a','b','s','t','CS','CG','I0','theta_m','gD_in')
   

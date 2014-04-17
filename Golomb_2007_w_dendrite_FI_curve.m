@@ -25,6 +25,11 @@ parfor s=1:no_steps
     AP_times = Vs > 0;
     spike_indices = find(diff(AP_times) == 1);
     freq_1 = 1000/(median(diff(spike_indices))*.005);
+    if ~isempty(nanmax(diff(spike_indices)))
+        freq_3 = 1000/(nanmax(diff(spike_indices))*.005);
+    else
+        freq_3 = nan;
+    end
     
     [Vs_pow, f] = pmtm(detrend(Vs),[],[],round(length(t)/no_secs));
     f_restricted = f(10<f & f<150);
@@ -34,7 +39,7 @@ parfor s=1:no_steps
     Vs_all(s,:) = Vs;
     pow_all(s,:) = Vs_pow;
     freqs(s,:) = f;
-    F(s,:) = [freq_1 freq_2];
+    F(s,:) = [freq_1 freq_2 freq_3];
     
 end
 
@@ -45,6 +50,7 @@ save(['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'
 figure;
 
 plot(I',F,'*')
+legend({'From Median ISI','From Spectral Peak','From Maximal ISI'})
 xlabel('Applied Current')
 ylabel('Spike Frequency (Hz)')
 save_as_pdf(gcf,['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD)])

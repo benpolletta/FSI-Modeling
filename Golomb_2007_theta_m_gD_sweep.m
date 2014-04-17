@@ -34,7 +34,7 @@ for rvar=1:rows
         
         VS(:,rvar,cvar) = Vs_temp;
         
-        yticklabels{rvar,cvar} = sprintf('I_a = %.2g, th_m = %.2g, g_D = %.2g',I_app_mat(rvar,cvar),theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
+        yticklabels{rvar,cvar} = sprintf('I_a = %g, th_m = %g, g_D = %g',I_app_mat(rvar,cvar),theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
         
     end
     
@@ -61,4 +61,4 @@ catch error
     
 end
 
-save(['Golomb_2007_sweep_theta_m',date_string,'.mat'],'VS','theta_m_mat','gD_mat','I_app_mat','t')
+save(['Golomb_2007_sweep_theta_m_gD_',date_string,'.mat'],'VS','theta_m_mat','gD_mat','I_app_mat','t')
