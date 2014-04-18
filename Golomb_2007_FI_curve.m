@@ -43,6 +43,8 @@ parfor s=1:no_steps
     
 end
 
+freqs = mean(freqs);
+
 save(['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'.mat'],'Vs_all','pow_all','I','F')
 
 figure()
@@ -59,6 +61,8 @@ plot_mat_1axis(Vs_all,t,label_struct,[],[],'k')
 
 save_as_pdf(gcf,['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'_Voltages'])
 
-plot_mat_1axis(pow_all(:,freqs<200),mean(freqs(:,freqs<200)),label_struct,[],[],'k')
+label_struct = struct('title',sprintf('FI Curve Spectra, theta_m = %g, g_D = %g',theta_m,gD),'xlabel','Freq (Hz)','ylabel','I_{app}','yticklabel',I);
 
-save_as_pdf(gcf,['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'Spectra'])
+plot_mat_1axis(pow_all(:,freqs<200),freqs(freqs<200),label_struct,[],[],'k')
+
+save_as_pdf(gcf,['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'_Spectra'])

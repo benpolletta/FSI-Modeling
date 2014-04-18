@@ -9,7 +9,7 @@ t = (0:dt:(no_secs*1000-dt))/1000;
 I = linspace(I_range(1),I_range(2),no_steps);
 no_steps = length(I);
 
-F=zeros(no_steps,2);
+F=zeros(no_steps,3);
 Vs_all=zeros(no_steps,length(t));
 
 pow_length_test = pmtm(Vs_all(1,:));
@@ -18,9 +18,9 @@ pow_length = length(pow_length_test);
 pow_all = zeros(no_steps,pow_length);
 freqs = zeros(no_steps,pow_length);
 
-parfor s=1:no_steps
+for s=1:no_steps
     
-    [Vs,~,~,~] = Golomb_2007_w_dendritic_gap_jxn(1,I(s),no_secs*1000,theta_m,gD);
+    [Vs,~,~,~] = Golomb_2007_w_dendritic_gap_jxn(1,I(s),no_secs*1000,theta_m,gD,0);
     
     AP_times = Vs > 0;
     spike_indices = find(diff(AP_times) == 1);
