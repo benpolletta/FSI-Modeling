@@ -83,13 +83,13 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   for i=1:T-1      %Integrate the equations.
 
       Vs(:,i+1) = Vs(:,i) + dt*(gNa*(steady(Vs(:,i),theta_m,sigma_m).^3).*h(:,i).*(ENa-Vs(:,i)) + gK*(n(:,i).^2).*(EK-Vs(:,i)) ...
-          + gD*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) ...
+          + gD.*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) + randn/2 ...
           + CS*s(:,i).*(-80-Vs(:,i)) + g_sd*(Vd(:,i)-Vs(:,i)));                                                             %Update I-cell voltage of soma.
       Vd(:,i+1) = Vd(:,i) + dt*(g_sd*(Vs(:,i)-Vd(:,i)) + (CG*diag(Vd(:,i))-diag(Vd(:,i))*CG)*ones(no_cells,1));             %Update I-cell voltage of dendrite.
       h(:,i+1) = h(:,i) + dt*((steady(Vs(:,i),theta_h,sigma_h)-h(:,i))./tau_h(Vs(:,i)));                                        %Update h.
       n(:,i+1) = n(:,i) + dt*((steady(Vs(:,i),theta_n,sigma_n)-n(:,i))./tau_n(Vs(:,i)));                                        %Update n.
-      a(:,i+1) = a(:,i) + dt*((steady(Vs(:,i),theta_a,sigma_a)-a(:,i))./tau_a);                                                 %Update a.
-      b(:,i+1) = b(:,i) + dt*((steady(Vs(:,i),theta_b,sigma_b)-b(:,i))./tau_b);                                                 %Update b.
+      a(:,i+1) = a(:,i) + dt*((steady(Vs(:,i),theta_a,sigma_a)-a(:,i))/tau_a);                                                 %Update a.
+      b(:,i+1) = b(:,i) + dt*((steady(Vs(:,i),theta_b,sigma_b)-b(:,i))/tau_b);                                                 %Update b.
       
       s(:,i+1) = s(:,i) + dt*(((1+tanh(Vs(:,i)/10))/2).*(1-s(:,i))/0.5 - s(:,i)/tau_I);                                         %Update s.
       

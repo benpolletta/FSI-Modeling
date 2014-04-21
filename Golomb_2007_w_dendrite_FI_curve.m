@@ -9,7 +9,7 @@ t = (0:dt:(no_secs*1000-dt))/1000;
 I = linspace(I_range(1),I_range(2),no_steps);
 no_steps = length(I);
 
-F=zeros(no_steps,3);
+F=zeros(no_steps,4);
 Vs_all=zeros(no_steps,length(t));
 
 pow_length_test = pmtm(Vs_all(1,:));
@@ -18,7 +18,7 @@ pow_length = length(pow_length_test);
 pow_all = zeros(no_steps,pow_length);
 freqs = zeros(no_steps,pow_length);
 
-for s=1:no_steps
+parfor s=1:no_steps
     
     [Vs,~,~,~] = Golomb_2007_w_dendritic_gap_jxn(1,I(s),no_secs*1000,theta_m,gD,0);
     
@@ -30,6 +30,7 @@ for s=1:no_steps
     else
         freq_3 = nan;
     end
+    freq_4 = length(spike_indices)/no_secs;
     
     [Vs_pow, f] = pmtm(detrend(Vs),[],[],round(length(t)/no_secs));
     f_restricted = f(10<f & f<150);
@@ -39,7 +40,7 @@ for s=1:no_steps
     Vs_all(s,:) = Vs;
     pow_all(s,:) = Vs_pow;
     freqs(s,:) = f;
-    F(s,:) = [freq_1 freq_2 freq_3];
+    F(s,:) = [freq_1 freq_2 freq_3 freq_4];
     
 end
 
@@ -50,7 +51,7 @@ save(['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'
 figure;
 
 plot(I',F,'*')
-legend({'From Median ISI','From Spectral Peak','From Maximal ISI'})
+legend({'From Median ISI','From Spectral Peak','From Maximal ISI','From Spikes/Sec.'})
 xlabel('Applied Current')
 ylabel('Spike Frequency (Hz)')
 save_as_pdf(gcf,['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD)])
