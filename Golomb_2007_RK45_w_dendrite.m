@@ -65,10 +65,10 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,the
     
     Vs = V(:,1:no_cells)';
     Vd = V(:,no_cells + (1:no_cells))';
-    h = V(:,2*no_cells + (1:no_cells))';
-    n = V(:,3*no_cells + (1:no_cells))';
-    a = V(:,4*no_cells + (1:no_cells))';
-    b = V(:,5*no_cells + (1:no_cells))';
-    s = V(:,6*no_cells + (1:no_cells))';
+    h = V(:,2*no_cells + (1:2*no_cells))';
+    n = V(:,4*no_cells + (1:2*no_cells))';
+    a = V(:,6*no_cells + (1:2*no_cells))';
+    b = V(:,8*no_cells + (1:2*no_cells))';
+    s = V(:,10*no_cells + (1:no_cells))';
   
 end
