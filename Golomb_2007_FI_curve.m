@@ -1,4 +1,4 @@
-function [Vs_all,I,F]=Golomb_2007_FI_curve(I_range,no_secs,no_steps,theta_m,gD)
+function [Vs_all,I,F]=Golomb_2007_FI_curve(I_range,no_secs,no_steps,theta_m,gD,noise_multiplier)
 
 % no_secs=1;
 
@@ -20,7 +20,7 @@ freqs = zeros(no_steps,pow_length);
 
 parfor s=1:no_steps
     
-    [Vs,~,~,~] = Golomb_2007(1,I(s),no_secs*1000,theta_m,gD);
+    [Vs,~,~,~,~,~] = Golomb_2007_RK45(1,I(s),no_secs*1000,theta_m,gD,noise_multiplier);
     
     AP_times = Vs > 0;
     spike_indices = find(diff(AP_times) == 1);

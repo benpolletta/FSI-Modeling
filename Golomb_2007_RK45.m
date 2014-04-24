@@ -13,10 +13,11 @@
 %  s = inhibitory synapse.
 %  t = time axis vector (useful for plotting).
 
-function [Vs,h,n,a,b,t] = Golomb_2007_RK45(no_cells,I_app,T0,theta_m,gD)
+function [Vs,h,n,a,b,t] = Golomb_2007_RK45(no_cells,I_app,T0,theta_m,gD,noise_multiplier)
 
     dt = 0.005;                       %The time step.
     T  = ceil(T0/dt);
+    t = (1:T)*dt;
 
     % t = (1:T)*dt;                     %Define time axis vector (useful for plotting).
 
@@ -30,7 +31,7 @@ function [Vs,h,n,a,b,t] = Golomb_2007_RK45(no_cells,I_app,T0,theta_m,gD)
     V0 = [Vs_0; h_0; n_0; a_0; b_0];
 
     % Perform integration using Runge-Kutta 4/5.
-    [t, V] = ode45(@(t, V) Golomb_2007_RHS(t,V,no_cells,theta_m,gD,I_app,I_on),dt*[1 T],V0);
+    [t, V] = ode45(@(t, V) Golomb_2007_RHS(t,V,no_cells,theta_m,gD,I_app,I_on,noise_multiplier),t,V0);%dt*[1 T],V0);
     
     Vs = V(:,1:no_cells)';
     h = V(:,no_cells + (1:no_cells))';

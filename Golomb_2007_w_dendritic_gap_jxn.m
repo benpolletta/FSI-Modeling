@@ -11,8 +11,10 @@
 %  s = inhibitory synapse.
 %  t = time axis vector (useful for plotting).
 
-function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,theta_m,gD_in,saveopt,gG_multiplier,gS_multiplier)
+function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,theta_m,gD_in,saveopt,noise_multiplier,gG_multiplier,gS_multiplier)
              
+  %% Parameters.
+
   gD = 2*gD_in;                        %Doubling conductances to account for dendrite.
 
   dt = 0.005;                       %The time step.
@@ -37,6 +39,22 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   
   t = (1:T)*dt;                     %Define time axis vector (useful for plotting).
   
+  if nargin >=7                     % Adding white noise with variance 0.5 microA/cm^2, unless otherwise specified.
+      
+      if isempty(noise_multiplier)
+      
+        noise_multiplier = .5;
+        
+      end
+        
+  elseif nargin < 7
+      
+      noise_multiplier = .5;
+       
+  end
+  
+  %% Preallocation & initial conditions.
+  
   Vs = zeros(no_cells,T);           %Make empty variables to hold I-cell results.
   Vd = zeros(no_cells,T);
   h = zeros(no_cells,T);
@@ -54,9 +72,11 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
   s(:,1)=0.0 + 0.1*rand(no_cells,1);
   I_on=100;%7*rand(no_cells,1);
   
+  %% Connectivity Matrices.
+  
   [CS,CG] = striatal_connectivity_matrices(no_cells,0,1);
   
-  if nargin >= 7
+  if nargin >= 8    % Doubling gap junction conductances, unless otherwise specified.
   
       if ~isempty(gG_multiplier)
       
@@ -68,22 +88,24 @@ function [Vs,Vd,h,n,a,b,t,s] = Golomb_2007_w_dendritic_gap_jxn(no_cells,I0,T0,th
       
       end
         
-  elseif nargin < 7
+  elseif nargin < 8
       
       CG = 2*CG;
        
   end
       
-  if nargin > 7 && ~isempty(gS_multiplier)
+  if nargin > 8 && ~isempty(gS_multiplier)
      
-          CS = gS_multiplier*CS;
+      CS = gS_multiplier*CS;
           
   end
   
-  for i=1:T-1      %Integrate the equations.
+  %% Integrating equations.
+  
+  for i=1:T-1
 
       Vs(:,i+1) = Vs(:,i) + dt*(gNa*(steady(Vs(:,i),theta_m,sigma_m).^3).*h(:,i).*(ENa-Vs(:,i)) + gK*(n(:,i).^2).*(EK-Vs(:,i)) ...
-          + gD.*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) + randn/2 ...
+          + gD.*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) + noise_multiplier*randn ...
           + CS*s(:,i).*(-80-Vs(:,i)) + g_sd*(Vd(:,i)-Vs(:,i)));                                                             %Update I-cell voltage of soma.
       Vd(:,i+1) = Vd(:,i) + dt*(g_sd*(Vs(:,i)-Vd(:,i)) + (CG*diag(Vd(:,i))-diag(Vd(:,i))*CG)*ones(no_cells,1));             %Update I-cell voltage of dendrite.
       h(:,i+1) = h(:,i) + dt*((steady(Vs(:,i),theta_h,sigma_h)-h(:,i))./tau_h(Vs(:,i)));                                        %Update h.

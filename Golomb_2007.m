@@ -13,7 +13,7 @@
 %  s = inhibitory synapse.
 %  t = time axis vector (useful for plotting).
 
-function [Vs,h,n,a,b,t] = Golomb_2007(no_cells,I0,T0,theta_m,gD)
+function [Vs,h,n,a,b,t] = Golomb_2007(no_cells,I0,T0,theta_m,gD,noise_multiplier)
 
   dt = 0.005;                       %The time step.
   T  = ceil(T0/dt);
@@ -50,7 +50,7 @@ function [Vs,h,n,a,b,t] = Golomb_2007(no_cells,I0,T0,theta_m,gD)
       
       %I-cell dynamics - NOTE the synaptic current!
       Vs(:,i+1) = Vs(:,i) + dt*(gNa*(inf(Vs(:,i),theta_m,sigma_m).^3).*h(:,i).*(ENa-Vs(:,i)) + gK*(n(:,i).^2).*(EK-Vs(:,i)) ...
-          + gD*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on));                                  %Update I-cell voltage.
+          + gD*a(:,i).^3.*b(:,i).*(EK-Vs(:,i)) + gL*(ERest-Vs(:,i)) + I0*(t(i)>I_on) + noise_multiplier*randn);            %Update I-cell voltage.
       h(:,i+1) = h(:,i) + dt*((inf(Vs(:,i),theta_h,sigma_h)-h(:,i))/tau_h(Vs(:,i)));                                         %Update h.
       n(:,i+1) = n(:,i) + dt*((inf(Vs(:,i),theta_n,sigma_n)-n(:,i))/tau_n(Vs(:,i)));                                         %Update n.
       a(:,i+1) = a(:,i) + dt*((inf(Vs(:,i),theta_a,sigma_a)-a(:,i))/tau_a);                                                  %Update a.

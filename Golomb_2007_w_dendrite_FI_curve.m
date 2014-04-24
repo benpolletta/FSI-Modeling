@@ -1,4 +1,4 @@
-function [Vs_all,I,F]=Golomb_2007_w_dendrite_FI_curve(I_range,no_secs,no_steps,theta_m,gD)
+function [Vs_all,I,F]=Golomb_2007_w_dendrite_FI_curve(I_range,no_secs,no_steps,theta_m,gD,noise_multiplier)
 
 % no_secs=1;
 
@@ -20,7 +20,7 @@ freqs = zeros(no_steps,pow_length);
 
 parfor s=1:no_steps
     
-    [Vs,~,~,~] = Golomb_2007_w_dendritic_gap_jxn(1,I(s),no_secs*1000,theta_m,gD,0);
+    [Vs,~,~,~,~,~,~,~] = Golomb_2007_RK45_w_dendrite(1,I(s),no_secs*1000,theta_m,gD,0,noise_multiplier);
     
     AP_times = Vs > 0;
     spike_indices = find(diff(AP_times) == 1);
@@ -68,4 +68,4 @@ title(sprintf('FI Curve Spectra, theta_m = %g, g_D = %g',theta_m,gD))
 xlabel('Freq. (Hz)')
 ylabel('Applied Current')
 
-save_as_pdf(gcf,['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'Spectra'])
+save_as_pdf(gcf,['Golomb_2007_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'_Spectra'])
