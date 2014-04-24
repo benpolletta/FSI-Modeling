@@ -23,10 +23,10 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,the
     
     Vs_0 = -70+7*rand(no_cells,1);  	%Set the initial conditions for P-cells, I-cells, and synapses.
     Vd_0 = Vs_0;
-    h_0 = 0.0 + 0.1*rand(no_cells,1);
-    n_0 = 0.0 + 0.1*rand(no_cells,1);
-    a_0 = 0.0 + 0.1*rand(no_cells,1);
-    b_0 = 0.0 + 0.1*rand(no_cells,1);
+    h_0 = 0.0 + 0.1*rand(2*no_cells,1);
+    n_0 = 0.0 + 0.1*rand(2*no_cells,1);
+    a_0 = 0.0 + 0.1*rand(2*no_cells,1);
+    b_0 = 0.0 + 0.1*rand(2*no_cells,1);
     s_0 = 0.0 + 0.1*rand(no_cells,1);
     I_on = 100;%7*rand(no_cells,1);
 
