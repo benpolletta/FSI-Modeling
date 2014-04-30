@@ -19,12 +19,12 @@ function [V_out] = Golomb_2007_RHS(t,V_in,no_cells,theta_m,gD,I_app,I_on,noise_m
     a_in = V_in(3*no_cells + (1:no_cells));
     b_in = V_in(4*no_cells + (1:no_cells));
 
-    Vs_out = gNa*(inf(Vs_in,theta_m,sigma_m).^3).*h_in.*(ENa-Vs_in) + gK*(n_in.^2).*(EK-Vs_in) ...
+    Vs_out = gNa*(steady(Vs_in,theta_m,sigma_m).^3).*h_in.*(ENa-Vs_in) + gK*(n_in.^2).*(EK-Vs_in) ...
       + gD.*a_in.^3.*b_in.*(EK-Vs_in) + gL*(ERest-Vs_in) + I_app*(t > I_on) + noise_multiplier*randn; %real(sqrt(2*noise_multiplier*randn));    %Update I-cell voltage.
-    h_out = (inf(Vs_in,theta_h,sigma_h)-h_in)./tau_h(Vs_in);                                            %Update h.
-    n_out = (inf(Vs_in,theta_n,sigma_n)-n_in)./tau_n(Vs_in);                                            %Update n.
-    a_out = (inf(Vs_in,theta_a,sigma_a)-a_in)/tau_a;                                                    %Update a.
-    b_out = (inf(Vs_in,theta_b,sigma_b)-b_in)/tau_b;                                                    %Update b.
+    h_out = (steady(Vs_in,theta_h,sigma_h)-h_in)./tau_h(Vs_in);                                            %Update h.
+    n_out = (steady(Vs_in,theta_n,sigma_n)-n_in)./tau_n(Vs_in);                                            %Update n.
+    a_out = (steady(Vs_in,theta_a,sigma_a)-a_in)/tau_a;                                                    %Update a.
+    b_out = (steady(Vs_in,theta_b,sigma_b)-b_in)/tau_b;                                                    %Update b.
   
     V_out = [Vs_out; h_out; n_out; a_out; b_out];
     
@@ -32,7 +32,7 @@ end
 
 %Below, define the auxiliary functions alpha & beta for each gating variable.
 
-function iout = inf(V,theta,sigma)
+function iout = steady(V,theta,sigma)
 iout = 1./(1+exp((theta-V)/sigma));
 end
 

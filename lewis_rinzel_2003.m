@@ -21,11 +21,11 @@ function [Vs,Vd,m,h,n31_32,n13,s,t] = lewis_rinzel_2003(no_cells,I0,T0,CS,CG)
   dt = 0.005;                       %The time step.
   T  = ceil(T0/dt);
   tauI = 10;                        %Decay time of inhibition.
-  gNa = 900/8.0425;  ENa=115;              %Sodium max conductance and reversal.    
-  gK31_32 = 1800/8.0425;  EK=-85;          %Potassium max conductance and reversal.
-  gK13 = 1.8/8.0425;
-  gL = 10/8.0425;  ERest=-70;            %Leak max conductance and reversal.
-  g_sd = 5/8.0425;                      %Conductance from dendrite to soma (half of leak conductance, as in Lewis & Rinzel 2003).
+  gNa = 900/10;  ENa=115;              %Sodium max conductance and reversal.    
+  gK31_32 = 1800/10;  EK=-85;          %Potassium max conductance and reversal.
+  gK13 = 1.8/10;
+  gL = 10/10;  ERest=-70;            %Leak max conductance and reversal.
+  g_sd = 5/10;                      %Conductance from dendrite to soma (half of leak conductance, as in Lewis & Rinzel 2003).
 
   t = (1:T)*dt;                     %Define time axis vector (useful for plotting).
   
@@ -66,7 +66,7 @@ end
 %Below, define the auxiliary functions alpha & beta for each gating variable.
 
 function aM = alphaM(V)
-aM = (3020-40*V)./(exp(75+V)/(-13.5) -1);
+aM = (3020 - 40*V)./(exp((75+V)/(-13.5))-1);
 end
 
 function bM = betaM(V)
@@ -78,21 +78,21 @@ aH = 0.0035./exp(V/42.248);
 end
 
 function bH = betaH(V)
-bH = -(0.8712 + 0.017*V)./(exp(51.25-V)/(-5.2)+1);
+bH = -(0.8712 + 0.017*V)./(exp((51.25-V)/(-5.2))+1);
 end
 
 function aN = alphaN31_32(V)
-aN = (95-V)./(exp(V-95)/(-11.8)-1);
+aN = (95-V)./(exp((V-95)/(-11.8))-1);
 end
 
 function bN = betaN31_32(V)
-bN = 0.025*exp(V/22.222);
+bN = 0.025./exp(V/22.222);
 end
 
 function aN = alphaN13(V)
-aN = -(0.616+.014*V)./(exp(44+V)/(-2.3)-1);
+aN = -(0.616+.014*V)./(exp((44+V)/(-2.3))-1);
 end
 
 function bN = betaN13(V)
-bN = 0.0043*exp((44+V)/34);
+bN = 0.0043./exp((44+V)/34);
 end

@@ -1,6 +1,6 @@
 function Golomb_2007_theta_m_gD_sweep(theta_m_mat,gD_mat,I_app_mat)
 
-T0 = 2000;
+T0 = 4000;
 dt = 0.005;                       %The time step.
 T  = ceil(T0/dt);
 t = (1:T)*dt;
@@ -26,20 +26,24 @@ end
 VS = nan(T,rows,columns);
 yticklabels = cell(rows,columns);
 
-for rvar=1:rows
+parfor cvar=1:columns
     
-    parfor cvar=1:columns
-        
-        [Vs_temp,~,~,~,~,~] = Golomb_2007(1,I_app_mat(rvar,cvar),T0,theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
-        
-        VS(:,rvar,cvar) = Vs_temp;
-        
-        yticklabels{rvar,cvar} = sprintf('I_a = %g, th_m = %g, g_D = %g',I_app_mat(rvar,cvar),theta_m_mat(rvar,cvar),gD_mat(rvar,cvar));
-        
+    I_app = I_app_mat(:,cvar);
+    theta_m = theta_m_mat(:,cvar);
+    gD = gD_mat(:,cvar);
+    
+    [Vs_temp,~,~,~,~,~] = Golomb_2007_RK45_w_dendrite(rows,I_app,T0,theta_m,gD,1,0,0);
+    
+    VS(:,:,cvar) = Vs_temp';
+    
+    for rvar = 1:rows
+    
+        yticklabels{rvar,cvar} = sprintf('I_a = %g, th_m = %g, g_D = %g',I_app(rvar),theta_m(rvar),gD(rvar));
+    
     end
-    
+        
 end
-
+    
 date_string = datestr(now,'dd-mm-yy_HH-MM-SS');
 
 try
