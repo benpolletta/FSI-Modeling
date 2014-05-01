@@ -2,6 +2,10 @@ function [Vs_all,I,F]=Golomb_2007_w_dendrite_FI_curve(I_range,no_secs,no_steps,t
 
 % no_secs=1;
 
+sim_name = sprintf('Golomb_2007_w_dendrite_FI_curve_thm%g_gd%g_I%g-%g_n%g',theta_m,gD,I_range(1),I_range(2),noise_multiplier);
+
+sim_title = sprintf('FI Curve Voltages, theta_m = %g, g_D = %g, noise = %g',theta_m,gD,noise_multiplier);
+
 dt = .005;
 t = (0:dt:(no_secs*1000-dt))/1000;
 
@@ -46,26 +50,27 @@ end
 
 freq = mean(freqs);
 
-save(['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'.mat'],'Vs_all','pow_all','freq','I','F')
+save([sim_name,'.mat'],'Vs_all','pow_all','freq','I','F')
 
 figure;
 
 plot(I',F,'*')
-legend({'From Median ISI','From Spectral Peak','From Maximal ISI','From Spikes/Sec.'})
+legend({'From Median ISI','From Spectral Peak','From Maximal ISI','From Spikes/Sec.'},'Location','NorthWest')
 xlabel('Applied Current')
 ylabel('Spike Frequency (Hz)')
-save_as_pdf(gcf,['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD)])
+title(sim_title)
+save_as_pdf(gcf,sim_name)
 
-label_struct = struct('title',sprintf('FI Curve Voltages, theta_m = %g, g_D = %g',theta_m,gD),'xlabel','Time (ms)','ylabel','I_{app}','yticklabel',I);
+label_struct = struct('title',sim_title,'xlabel','Time (s)','ylabel','I_{app}','yticklabel',I);
 
 plot_mat_1axis(Vs_all,t,label_struct,[],[],'k')
 
-save_as_pdf(gcf,['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'_Voltages'])
+save_as_pdf(gcf,[sim_name,'_Voltages'])
 
 figure;
 imagesc(freq(freq<200),I,zscore(pow_all(:,freq<200)))
-title(sprintf('FI Curve Spectra, theta_m = %g, g_D = %g',theta_m,gD))
+title(sim_title)
 xlabel('Freq. (Hz)')
 ylabel('Applied Current')
 
-save_as_pdf(gcf,['Golomb_2007_w_dendrite_FI_curve_thm',num2str(theta_m),'_gd',num2str(gD),'_Spectra'])
+save_as_pdf(gcf,[sim_name,'_Spectra'])
