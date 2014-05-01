@@ -22,7 +22,7 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     g_struct.gNa = 112.5*g_mod_vec;
     g_struct.gK = 225*g_mod_vec;
     g_struct.gL = 0.25*g_mod_vec;
-    g_struct.g_sd = 0.25/2*ones(2*no_cells,1);
+    g_struct.g_sd = (0.25/2)*ones(no_cells,1);
     g_struct.theta_m = -24;
     g_struct.gD = 1.6;
     g_fields = fieldnames(g_struct);
@@ -36,6 +36,12 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
         if ~isempty(eval(['in_g_struct.',char(field)])) % empty values are discarded
             eval(['g_struct.', char(field), ' = in_g_struct.', char(field),';']);
         end
+    end
+    
+    if isscalar(I_app)
+        
+        I_app = [I_app*ones(no_cells,1); zeros(no_cells,1)];
+        
     end
 
 
@@ -51,7 +57,7 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     n_0 = 0.0 + 0.1*rand(2*no_cells,1);
     a_0 = 0.0 + 0.1*rand(2*no_cells,1);
     b_0 = 0.0 + 0.1*rand(2*no_cells,1);
-    s_0 = 0.0 + 0.1*rand(no_cells,1);
+    s_0 = 0.0 + 0.1*rand(2*no_cells,1);
     I_on = 100;%7*rand(no_cells,1);
 
     V0 = [Vs_0; Vd_0; h_0; n_0; a_0; b_0; s_0];
@@ -60,7 +66,7 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     
     [CS,CG] = striatal_connectivity_matrices(no_cells,0,1);
     
-    if nargin >= 7    % Doubling gap junction conductances, unless otherwise specified.
+    if nargin >= 6    % Doubling gap junction conductances, unless otherwise specified.
         
         if ~isempty(gG_multiplier)
             
@@ -72,13 +78,13 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
             
         end
         
-    elseif nargin < 7
+    elseif nargin < 6
         
         CG = 2*CG;
         
     end
     
-    if nargin > 7 && ~isempty(gS_multiplier)
+    if nargin > 6 && ~isempty(gS_multiplier)
         
         CS = gS_multiplier*CS;
         
@@ -88,7 +94,7 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     CS = [CS zeros(no_cells); zeros(no_cells,2*no_cells)];
     
     %% Perform integration using Runge-Kutta 4/5.
-    [t, V] = ode45(@(t, V) Golomb_2007_RHS(t,V,no_cells,CS,CG,g_struct,I_app,I_on,noise_multiplier),t,V0);%dt*[1 T],V0);
+    [t, V] = ode45(@(t, V) Golomb_2007_RHS(t,V,CS,CG,g_struct,I_app,I_on,noise_multiplier),t,V0);%dt*[1 T],V0);
     
     Vs = V(:,1:no_cells)';
     Vd = V(:,no_cells + (1:no_cells))';
@@ -96,6 +102,6 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     n = V(:,4*no_cells + (1:2*no_cells))';
     a = V(:,6*no_cells + (1:2*no_cells))';
     b = V(:,8*no_cells + (1:2*no_cells))';
-    s = V(:,10*no_cells + (1:no_cells))';
+    s = V(:,10*no_cells + (1:2*no_cells))';
   
 end
