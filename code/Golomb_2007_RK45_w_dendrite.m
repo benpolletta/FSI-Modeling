@@ -91,7 +91,7 @@ function [Vs,Vd,h,n,a,b,s,t] = Golomb_2007_RK45_w_dendrite(no_cells,I_app,T0,in_
     end
 
     CG = [zeros(no_cells) diag(g_struct.g_sd); diag(g_struct.g_sd) CG];
-    CS = [CS zeros(no_cells); zeros(no_cells,2*no_cells)];
+    CS = [zeros(no_cells,2*no_cells); CS zeros(no_cells)];
     
     %% Perform integration using Runge-Kutta 4/5.
     [t, V] = ode45(@(t, V) Golomb_2007_RHS(t,V,CS,CG,g_struct,I_app,I_on,noise_multiplier),t,V0);%dt*[1 T],V0);

@@ -39,64 +39,65 @@ x_out = alpha*(1 - x) - beta*x;
 end
 
 function a_M = alpha_m(V)
-num = 1000*(3020 - 40*V);
+num = 3020 - 40*V;
 denom = exp((V+75)/13.5) - 1;
 a_M = num/denom;
 end
 
 function b_M = beta_m(V)
-num = 1226.2;
+num = 1.2262;
 denom = exp(V/42.248);
 b_M = num./denom;
 end
 
 function a_H = alpha_h(V)
-num = 3.5;
+num = .0035;
 denom = exp(V/24.186);
 a_H = num./denom;
 end
 
 function b_H = beta_h(V)
-num = -1000*(0.8712 + 17*V);
+num = -(0.8712 + 0.017*V);
 denom = exp((V + 51.25)/(-5.2)) - 1;
 b_H = num./denom;
 end
 
 function a_N = alpha_n13(V)
-num = -(616 + 14*V);
+num = -(0.616 + 0.014*V);
 denom = exp((V+44)/(-2.3)) - 1;
 a_N = num./denom;
 end
 
 function b_N = beta_n13(V)
-num = 4.3;
+num = 0.0043;
 denom = exp((V+44)/(34));
 b_N = num./denom;
 end
 
 function a_N = alpha_n3132(V)
-num = -(95000 - 1000*V);
+num = -(95 - V);
 denom = exp((V-95)/(-11.8)) - 1;
 a_N = num./denom;
 end
 
 function b_N = beta_n3132(V)
-num = 25;
+num = 0.025;
 denom = exp(V/22.222);
 b_N = num./denom;
 end
 
 function m_i = m_inf(V)
+num = 0.001;
 denom = exp((V + 45)/(-13)) + 1;
-m_i = 1./denom;
+m_i = num./denom;
 end
 
 function t_M = tau_m(V)
-t_M = .001*(exp((V + 70)/(-13)) + 1);
+t_M = 0.000001*(exp((V + 70)/(-13)) + 1);
 end
 
 function h_i = h_inf(V)
-num = 1;
+num = 0.001;
 denom = exp((V + 77)/8) + 1;
 h_i = num./denom;
 end
