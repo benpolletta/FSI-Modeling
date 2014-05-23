@@ -3,6 +3,8 @@ function [V, ipsps, epsps, spikes, CI, CE, t] = LIF_interneuron_network(no_cells
 %integration with RK45.
 %   T0 is in milliseconds.
 
+sim_name = sprintf('LIF_%dcells_%dinputs_%dms_%gHz',no_cells,no_inputs,T0,e_rate);
+
 dt = .005;
 
 T = floor(T0/dt);
@@ -12,9 +14,9 @@ V_rest = -70; V_thresh = -52; V_reset = -59; V_spike = 0;
 gE = 0.3; gI = 4;
 
 tau_i1 = 1; tau_ir = 0.5; tau_id = 5; tau_i = 10;
-tau_e1 = 1; tau_er = 0.5; tau_ed = 2; tau_e = 20;
-dt_i = tau_i1/.005;
-dt_e = tau_e1/.005;
+tau_e1 = 1; tau_er = 0.5; tau_ed = 2; %tau_e = 20;
+% dt_i = tau_i1/.005;
+% dt_e = tau_e1/.005;
 
 t = (1:T)*dt;                     %Define time axis vector (useful for plotting).
 
@@ -62,8 +64,8 @@ V = zeros(no_cells,T);                %Make empty variables to hold I-cell resul
 % s_i = zeros(no_cells,T);                %Make empty variables to hold the synapse results.
 % s_e = zeros(no_inputs,T);
 
-i_spikes = zeros(no_cells,1);
-i_spike_arrivals = zeros(no_cells,T);
+% i_spikes = zeros(no_cells,1);
+% i_spike_arrivals = zeros(no_cells,T);
 ipsps = zeros(no_cells,T);
 % e_spike_times = t(end)*ones(no_inputs,1);
 
@@ -134,6 +136,56 @@ for i=1:T-1                       %Integrate the equations.
 %     end
 
 end
+
+save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
+
+figure;
+
+subplot(3,1,1)
+plot(t',V')
+axis tight
+box off
+title('I-cell Voltages')
+
+subplot(3,1,2)
+plot(t',ipsps')
+axis tight
+box off
+title('IPSPs')
+
+subplot(3,1,3)
+plot(t',epsps')
+axis tight
+box off
+title('EPSPs')
+
+save_as_pdf(gcf,[sim_name,'_Voltages'])
+
+figure;
+
+subplot(3,1,1)
+
+colormap('gray')
+imagesc(t,1:no_cells,1-(V>=V_thresh))
+title('Raster Plot')
+
+subplot(3,1,2)
+
+ax = plotyy(t',mean(V)',t',mean(ipsps)');
+axis tight
+box off
+title('Population Potentials')
+ylabel(ax(1),'Membrane Potential')
+ylabel(ax(2),'IPSP')
+
+subplot(3,1,3)
+
+plot(t',sum(V>=V_thresh)')
+axis tight
+box off
+title('Number of Spikes per Timestep')
+
+save_as_pdf(gcf,[sim_name,'_pop_mean'])
 
 end
 
