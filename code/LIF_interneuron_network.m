@@ -9,11 +9,11 @@ dt = .005;
 
 T = floor(T0/dt);
 
-V_rest = -70; V_thresh = -52; V_reset = -59; V_spike = 0;
+V_rest = -70; V_thresh = -52; V_reset = -85; V_spike = 0;
 
 gE = 0.3; gI = 4;
 
-tau_i1 = 1; tau_ir = 0.5; tau_id = 5; tau_i = 10;
+tau_i1 = 1; tau_ir = 0.5; tau_id = 5; tau_i = 10; tau_r = 1;
 tau_e1 = 1; tau_er = 0.5; tau_ed = 2; %tau_e = 20;
 % dt_i = tau_i1/.005;
 % dt_e = tau_e1/.005;
@@ -64,7 +64,7 @@ V = zeros(no_cells,T);                %Make empty variables to hold I-cell resul
 % s_i = zeros(no_cells,T);                %Make empty variables to hold the synapse results.
 % s_e = zeros(no_inputs,T);
 
-% i_spikes = zeros(no_cells,1);
+last_spike_times = -tau_r*ones(no_cells,1);
 % i_spike_arrivals = zeros(no_cells,T);
 ipsps = zeros(no_cells,T);
 % e_spike_times = t(end)*ones(no_inputs,1);
@@ -73,10 +73,19 @@ V(:,1)= -70.0 + 10*rand(no_cells,1);  	%Set the initial conditions for I-cells.
 
 for i=1:T-1                       %Integrate the equations.
     
-    % LIF dynamics.
+    % LIF subthreshold dynamics.
+    %st = V(:,i) < V_spike;
+    %V(st,i+1) = V(st,i) + dt*((V_rest - V(st,i))/tau_i - epsps(st,i).*V(st,i) + (CI(st,:)*ipsps(:,i)).*(-70-V(st,i)));
     V(:,i+1) = V(:,i) + dt*((V_rest - V(:,i))/tau_i - epsps(:,i).*V(:,i) + (CI*ipsps(:,i)).*(-70-V(:,i)));
-    V(V(:,i+1) >= V_thresh,i+1) = V_spike;
-    V(V(:,i) == V_spike,i+1) = V_reset;
+    
+    % LIF spiking.
+    active_cells = (t(i+1) - last_spike_times) > tau_r;
+    spiking_cells = active_cells & (V(:,i+1) >= V_thresh);
+    V(spiking_cells,i+1) = V_spike;
+    last_spike_times(spiking_cells) = t(i+1);
+    
+    %LIF reset.
+    V(~active_cells, i+1) = V_reset;
     
 %     % Handling spiking in I cells.
 %     if any(V(:,i+1) == V_spike)
@@ -137,7 +146,7 @@ for i=1:T-1                       %Integrate the equations.
 
 end
 
-save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
+% save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
 
 figure;
 
@@ -159,33 +168,37 @@ axis tight
 box off
 title('EPSPs')
 
-save_as_pdf(gcf,[sim_name,'_Voltages'])
+% save_as_pdf(gcf,[sim_name,'_Voltages'])
 
-figure;
-
-subplot(3,1,1)
-
-colormap('gray')
-imagesc(t,1:no_cells,1-(V>=V_thresh))
-title('Raster Plot')
-
-subplot(3,1,2)
-
-ax = plotyy(t',mean(V)',t',mean(ipsps)');
-axis tight
-box off
-title('Population Potentials')
-ylabel(ax(1),'Membrane Potential')
-ylabel(ax(2),'IPSP')
-
-subplot(3,1,3)
-
-plot(t',sum(V>=V_thresh)')
-axis tight
-box off
-title('Number of Spikes per Timestep')
-
-save_as_pdf(gcf,[sim_name,'_pop_mean'])
+if no_cells > 1
+    
+    figure;
+    
+    subplot(3,1,1)
+    
+    colormap('gray')
+    imagesc(t,1:no_cells,1-(V>=V_thresh))
+    title('Raster Plot')
+    
+    subplot(3,1,2)
+    
+    ax = plotyy(t',mean(V)',t',mean(ipsps)');
+    axis tight
+    box off
+    title('Population Potentials')
+    ylabel(ax(1),'Membrane Potential')
+    ylabel(ax(2),'IPSP')
+    
+    subplot(3,1,3)
+    
+    plot(t',sum(V>=V_thresh)')
+    axis tight
+    box off
+    title('Number of Spikes per Timestep')
+    
+    % save_as_pdf(gcf,[sim_name,'_pop_mean'])
+    
+end
 
 end
 
