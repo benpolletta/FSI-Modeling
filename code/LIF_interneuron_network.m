@@ -146,7 +146,7 @@ for i=1:T-1                       %Integrate the equations.
 
 end
 
-% save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
+save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
 
 figure;
 
@@ -168,7 +168,7 @@ axis tight
 box off
 title('EPSPs')
 
-% save_as_pdf(gcf,[sim_name,'_Voltages'])
+save_as_pdf(gcf,[sim_name,'_Voltages'])
 
 if no_cells > 1
     
@@ -196,7 +196,7 @@ if no_cells > 1
     box off
     title('Number of Spikes per Timestep')
     
-    % save_as_pdf(gcf,[sim_name,'_pop_mean'])
+    save_as_pdf(gcf,[sim_name,'_pop_mean'])
     
 end
 
