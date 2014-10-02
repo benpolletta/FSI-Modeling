@@ -1,4 +1,4 @@
-function [V, ipsps, epsps, spikes, CI, CE, t] = LIF_interneuron_network(no_cells,no_inputs,T0,e_rate)
+function [V, ipsps, epsps, spikes, CI, CE, t] = LIF_interneuron_network(no_cells,no_inputs,T0,e_rate,plot_opt)
 %UNTITLED2 Right-hand side of leaky-integrate-and-fire neuron, for
 %integration with RK45.
 %   T0 is in milliseconds.
@@ -51,7 +51,7 @@ end
 % e_spike_times = diff([cum_spikes cum_spikes(:,end)],1,2);
 
 CI = rand(no_cells,no_cells);     %Define connectivity between inhibitory cells.
-CI = CI<.1;
+CI = CI<.4;
 CI = CI - diag(diag(CI));
 CI = CI*gI;
 
@@ -148,29 +148,35 @@ end
 
 save(sim_name,'V','ipsps','epsps','spikes','CI','CE','t')
 
-figure;
+%% Plotting.
 
-subplot(3,1,1)
-plot(t',V')
-axis tight
-box off
-title('I-cell Voltages')
+if no_cells == 1 || plot_opt == 1
+    
+    figure;
+    
+    subplot(3,1,1)
+    plot(t',V')
+    axis tight
+    box off
+    title('I-cell Voltages')
+    
+    subplot(3,1,2)
+    plot(t',ipsps')
+    axis tight
+    box off
+    title('IPSPs')
+    
+    subplot(3,1,3)
+    plot(t',epsps')
+    axis tight
+    box off
+    title('EPSPs')
+    
+    save_as_pdf(gcf,[sim_name,'_Voltages'])
+    
+end
 
-subplot(3,1,2)
-plot(t',ipsps')
-axis tight
-box off
-title('IPSPs')
-
-subplot(3,1,3)
-plot(t',epsps')
-axis tight
-box off
-title('EPSPs')
-
-save_as_pdf(gcf,[sim_name,'_Voltages'])
-
-if no_cells > 1
+if no_cells > 1 || plot_opt == 1
     
     figure;
     
