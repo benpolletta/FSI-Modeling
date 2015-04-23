@@ -1,6 +1,6 @@
 %check for whether cells are connected in 10 cell version
 clear;
-T0 = 10000;  %3000 millisecond long trial
+T0 = 20000;  %3000 millisecond long trial
 dt = .005;
 T = floor(T0/dt);
 t = (1:T)*dt;
@@ -80,9 +80,9 @@ for j = 1:max_j
 	CG = gj_strength*(rand(no_cells) < p_gj);
 	CG(logical(eye(size(CG)))) = 0;
     
-    parfor k = 1:max_k
+    for k = 1:max_k
         
-        [Vs,Vd,s,m,h,n,t] = ing_w_dendritic_gap_jxn(no_cells, epsps-ipsps, T0, [], zeros(no_cells), (k-1)*CG);
+        tic; [Vs,Vd,s,m,h,n,t] = ing_w_dendritic_gap_jxn(no_cells, epsps-ipsps, T0, [], zeros(no_cells), (k-1)*CG); toc;
         
         subplot(max_k, max_j, (k - 1)*max_j + j), plot(t', Vs')
         
@@ -141,3 +141,7 @@ pop_norm_spike_pairs = reshape(sum(sum(norm_spike_pairs)), max_k, max_j)
 
 mean_pop_firing_rate = mean(pop_firing_rate, 2)
 mean_pop_norm_spike_pairs = mean(pop_norm_spike_pairs, 2)
+
+save(['uncorrelated_test_', date, '.mat'], 'firing_rate', 'spike pairs', 'norm_spike_pairs', 'pop_firing_rate', 'pop_norm_spike_pairs', 'mean_pop_firing_rate', 'mean_pop_norm_spike_pairs')
+
+save_as_pdf(gcf, ['uncorrelated_test_', date])
