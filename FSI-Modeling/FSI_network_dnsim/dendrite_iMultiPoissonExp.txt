@@ -1,5 +1,5 @@
 rate = [2]
-T = [2000]
+T = [10000]
 g_esyn = [0.1]
 g_isyn = [0.1]
 E_esyn = [0]
@@ -14,9 +14,9 @@ Gi = multi_Poisson(Npop,N_iinputs,rate,tau_i,tau_1,5,.5,T,dt)
 
 Gte(t) = g_esyn.*Ge(:,max(1,round(t/dt)))
 Gti(t) = g_isyn.*Gi(:,max(1,round(t/dt)))
-Itrain_e(t,v) = Gte(t).*(v - E_esyn)
-Itrain_i(t,v) = Gti(t).*(v - E_isyn)
-Itrain(t,v) = Itrain_e(t,v) + Itrain_i(t,v)
+Itrain_e(v,t) = Gte(t).*(v - E_esyn)
+Itrain_i(v,t) = Gti(t).*(v - E_isyn)
+Itrain(v,t) = Itrain_e(t,v) + Itrain_i(t,v)
  
-current => -Itrain(t,IN)
+current => -Itrain(IN,t)
  

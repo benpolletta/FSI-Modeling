@@ -4,7 +4,7 @@ T0 = 20000;  %3000 millisecond long trial
 dt = .005;
 T = floor(T0/dt);
 t = (1:T)*dt;
-no_cells = 10
+no_cells = 10;
 p_gj = 0.33; %probability of gap junction between any pair of cells. should be 1 if you're using 2 cells
 
 no_e_inputs = 127*no_cells; %127 = number of AMPA input synapses per cell in Hjorth et al, times 10 cells

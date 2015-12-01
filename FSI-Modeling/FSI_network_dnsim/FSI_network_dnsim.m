@@ -1,5 +1,5 @@
 % Model: FSI_network
-cd /Users/benjaminpittman-polletta/Documents/Science/Research_Projects/dnsim/FSI_network;
+cd /Users/benjaminpittman-polletta/Documents/Science/Research_Projects/Modeling/FSI-Modeling/FSI_network_dnsim;
 spec=[];
 spec.nodes(1).label = 'soma';
 spec.nodes(1).multiplicity = 100;
@@ -26,15 +26,39 @@ spec.connections(2,2).parameters = [];
 %dnsim(spec); % open model in DNSim GUI
 
 % DNSim simulation and plots:
-data = runsim(spec,'timelimits',[0 100],'dt',.02,'SOLVER','euler','savedata_flag',1,'timesurfer_flag',0); % simulate DNSim models
-plotv(data,spec,'varlabel','v'); % quickly plot select variables
-v_soma = data.soma;
-plot(mean(v_soma))
+data = runsim(spec,'timelimits',[0 10000],'dt',.02,'SOLVER','euler','savedata_flag',0,'timesurfer_flag',0); % simulate DNSim models
+% plotv(data,spec,'varlabel','v'); % quickly plot select variables
+v_soma = data.soma_v;
+time = data.time;
+
+subplot(3, 1, 1)
+imagesc(time(5001:end), 1:spec.nodes(1).multiplicity, v_soma(5001:end, :)')
+colorbar
+ylabel('Cell #')
+xlabel('Time (ms)')
+
+v_mean = mean(v_soma(5001:end, :)');
+
+subplot(3, 1, 2)
+plot(time(5001:end), mean(v_soma(5001:end, :)'))   
+axis tight
+xlabel('Time (ms)')
+ylabel('Mean Voltage (mV)')
+
+[v_mean_hat, f] = pmtm(v_mean, [], [], 1000/.02);
+
+subplot(3, 1, 3)
+loglog(f, v_mean_hat)
+axis tight
+xlabel('Frequency (Hz)')
+ylabel('Spectral Power')
+
+save_as_eps(gcf, 'FSI_network_dnsim_output')
 %visualizer(data); % ugly interactive tool hijacked to visualize sim_data
 
 % Sweep over parameter values:
-model=buildmodel(spec); % parse DNSim spec structure
-simstudy(model,{'soma'},{'N'},{'[1 2]'},'timelimits',[0 100],'dt',.02,'SOLVER','euler'); % N = # of cells
+% model=buildmodel(spec); % parse DNSim spec structure
+% simstudy(model,{'soma'},{'N'},{'[1 2]'},'timelimits',[0 100],'dt',.02,'SOLVER','euler'); % N = # of cells
 
 
 % Manual simulation and plots:
