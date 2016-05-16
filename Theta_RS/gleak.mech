@@ -1,0 +1,13 @@
+% Leak current from Gutfreund et al. 1995.
+% Parameters
+gl = .0125
+El = -65
+
+
+% Functions
+Il(X) = gl*(X-El)
+
+% ODEs & ICs
+
+% Linkers
+@current += -Il(X)
