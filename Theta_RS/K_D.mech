@@ -1,0 +1,23 @@
+% K_D: slowly inactivating potassium current.
+% parameters
+gD = 0.39
+EK = -90
+theta_a = -50
+sigma_a = 20
+tau_a = 2
+theta_b = -70
+sigma_b = -6
+tau_b = 150
+
+% functions
+inf(X,theta,sigma) = 1/(1 + exp((theta-X)/sigma))
+iKD(X,a,b) = -gD.*a.^3.*b.*(EK-X)
+
+% ODEs and ICs
+a' = (inf(V,theta_a,sigma_a)-a)/tau_a
+b' = (inf(V,theta_b,sigma_b)-b)/tau_b
+a(0) = 0.1*rand(1,Npop)
+b(0) = 0.1*rand(1,Npop)
+
+% linkers
+@current += iKD
