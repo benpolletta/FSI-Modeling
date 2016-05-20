@@ -2,14 +2,15 @@
 % Tags: sodium, channel, intrinsic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gKDR=5
+gKDR=5%/3
 E_KDR = -80
 tau_m = 1 % (3^((temp-6.3)/10)); temp = 34
 IC=0; IC_noise=0
+Koffset = -25
 
 % Functions
-aM(X) = -.01*(X+20)./(exp(-(X+20)/10)-1)
-bM(X) = .125*exp(-(X+30)/80)
+aM(X) = -.01*(X+20-Koffset)./(exp(-(X+20-Koffset)/10)-1)
+bM(X) = .125*exp(-(X+30-Koffset)/80)
 IKDR(X,mKDR) = gKDR.*mKDR.^4.*(X-E_KDR)
 
 % ODEs

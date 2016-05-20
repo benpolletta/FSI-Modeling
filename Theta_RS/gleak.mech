@@ -1,6 +1,6 @@
 % Leak current from Gutfreund et al. 1995.
 % Parameters
-gl = .0125
+gl = .025%/4
 El = -65
 
 
