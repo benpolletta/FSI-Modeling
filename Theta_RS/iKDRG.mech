@@ -4,7 +4,7 @@
 % Parameters
 gKDR=5%/3
 E_KDR = -80
-tau_m = 1 % (3^((temp-6.3)/10)); temp = 34
+tau_m = 1 % (3^((temp-22)/10)); temp = 34
 IC=0; IC_noise=0
 Koffset = -25
 

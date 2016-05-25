@@ -15,28 +15,32 @@ for v = 1:no_varied
     vary_lengths(v) = length(varied{v, 3});
     
 end
+    
+rfp_lengths = [vary_lengths([1 2]) prod(vary_lengths(3:end))];
 
 if no_varied > 2
     
-    rfp_lengths = [vary_lengths([1 2]) prod(vary_lengths(3:end))];
+    no_figures = rfp_lengths(end);
     
-end
-
-no_figures = rfp_lengths(end);
-
-vary_lengths_cp = cumprod(vary_lengths(3:end));
-
-figure_params = nan(no_figures, no_varied - 2);
-
-for p = 1:no_figures
+    vary_lengths_cp = cumprod(vary_lengths(3:end));
     
-    figure_params(p, 1) = vary_vectors{3}(mod(p - 1, vary_lengths(3)) + 1);
+    figure_params = nan(no_figures, no_varied - 2);
     
-    for v = 4:no_varied
+    for p = 1:no_figures
         
-        figure_params(p, v - 2) = vary_vectors{v}(ceil(p/vary_lengths_cp(v - 3)));
- 
+        figure_params(p, 1) = vary_vectors{3}(mod(p - 1, vary_lengths(3)) + 1);
+        
+        for v = 4:no_varied
+            
+            figure_params(p, v - 2) = vary_vectors{v}(ceil(p/vary_lengths_cp(v - 3)));
+            
+        end
+        
     end
+        
+else
+
+    no_figures = 1;
     
 end
 
