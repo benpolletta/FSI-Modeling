@@ -4,9 +4,9 @@
 % Parameters
 gKDR=5%/3
 E_KDR = -80
-tau_m = 1 % (3^((temp-22)/10)); temp = 34
+tau_m = (3^((temp-22)/10)); temp = 34 % 1
 IC=0; IC_noise=0
-Koffset = -25
+Koffset = 0
 
 % Functions
 aM(X) = -.01*(X+20-Koffset)./(exp(-(X+20-Koffset)/10)-1)

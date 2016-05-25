@@ -1,9 +1,9 @@
 % Persistent sodium current, after French et al. 1990, from Gutfreund et al. 1995.
 % parameters
-gNaP=.0125 % .022 max sodium conductance
+gNaP=.022 % .0125 max sodium conductance
 ENa=40
 tauNaP=5
-halfNaP=-50
+halfNaP=-40
 IC_noise=0; m_IC=0
 
 % functions
