@@ -1,0 +1,11 @@
+% Persistent sodium current, after French et al. 1990, from Gutfreund et al. 1995.
+% parameters
+g_dendrite = 0.01
+
+% functions
+v_dendrite(t) = -45+10*cos(2*pi*t/8)
+Idendrite(X,t) = g_dendrite.*(X-v_dendrite(t))
+
+% linkers
+@current += -Idendrite(X,t)
+
