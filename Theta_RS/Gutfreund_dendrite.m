@@ -1,4 +1,4 @@
-function data = Gutfreund_dendrite(gcom,I_app, varargin)
+function data = Gutfreund_dendrite(gcom, I_app, varargin)
 
 vary_label = ''; vary_cell = cell(length(varargin)/3, 3);
 
@@ -31,7 +31,7 @@ s.populations(2).size=1;
 s.populations(2).equations=eqns;
 s.populations(2).mechanism_list={'iNaG','iKDRG','gleak','iNaP','iKs'};
 s.populations(1).parameters={'gNaP',0.025,'gKs',0.084,...
-    'gKDR',5/d_num,'gNa',12.5/d_num,'gl',0.025,'tau_h',7,'tau_m',7,'Noffset',0,'Koffset',0};
+    'gKDR',5/d_num,'gNa',12.5/d_num,'gl',0.025/d_num,'tau_h',7,'tau_m',7,'Noffset',0,'Koffset',0};
 s.connections(1).direction='soma->dendrite';
 s.connections(1).mechanism_list={'iCOM'};
 s.connections(1).parameters={'gCOM',gcom};
