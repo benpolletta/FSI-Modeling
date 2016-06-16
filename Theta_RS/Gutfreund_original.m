@@ -26,12 +26,28 @@ model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
 
 if ~isempty(varargin)
     
-    data=SimulateModel(model_eqns, 'tspan', [0 4000], 'vary', vary_cell); % , 'compile_flag', 1);
+    if strcmp(version('-release'), '2012a')
+    
+        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell);
+    
+    else
+        
+        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
+    
+    end
     
 else
     
-    data=SimulateModel(model_eqns, 'tspan', [0 4000]); % , 'compile_flag', 1); %{'pop1','gKs',.04:.002:.06 % ;'pop1','gNaP',.010:.001:.020}); % {'pop1','gd',5:10;'pop1','I_app',10:20});
-
+    if strcmp(version('-release'), '2012a')
+    
+        data = SimulateModel(s, 'tspan', [0 4000]);
+    
+    else
+    
+        data=SimulateModel(s, 'tspan', [0 4000], 'compile_flag', 1);
+        
+    end
+     
 end
     
 try 
