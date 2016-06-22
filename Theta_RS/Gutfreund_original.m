@@ -28,11 +28,11 @@ if ~isempty(varargin)
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell);
+        data = SimulateModel(model_eqns, 'tspan', [0 4000], 'vary', vary_cell);
     
     else
         
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
+        data = SimulateModel(model_eqns, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
     
     end
     
@@ -40,11 +40,11 @@ else
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000]);
+        data = SimulateModel(model_eqns, 'tspan', [0 4000]);
     
     else
     
-        data=SimulateModel(s, 'tspan', [0 4000], 'compile_flag', 1);
+        data=SimulateModel(model_eqns, 'tspan', [0 4000], 'compile_flag', 1);
         
     end
      
