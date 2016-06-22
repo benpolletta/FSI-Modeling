@@ -18,20 +18,21 @@ eqns = ['dv/dt=I_app*(1+rand(1,N_pop)*.25)+@current/Cm; Cm=.25; v(0)=-65; I_app=
     'monitor functions'];
     % sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
 
-d_num = 3;
+d_num = 1; s_num = 5;
 
 s=[];
 s.populations(1).name='soma';
 s.populations(1).size=1;
 s.populations(1).equations=eqns;
-s.populations(1).mechanism_list={'iNaG','iKDRG','gleak'};
-s.populations(1).parameters={'gKDR',5,'gNa',12.5,'gl',0.025,'Noffset',0,'Koffset',0};
+s.populations(1).mechanism_list={'iNaG','iKDRG','gleak','iNaP','iKs'};
+s.populations(1).parameters={'gNaP',0.025/s_num,'gKs',0.084/s_num,... % 'halfNaP',-60,'halfKs',-50,...
+    'gKDR',5,'gNa',12.5,'gl',0.025,'Noffset',-17.5,'Koffset',-17.5};
 s.populations(2).name='dendrite';
 s.populations(2).size=1;
 s.populations(2).equations=eqns;
 s.populations(2).mechanism_list={'iNaG','iKDRG','gleak','iNaP','iKs'};
-s.populations(1).parameters={'gNaP',0.025,'gKs',0.084,...
-    'gKDR',5/d_num,'gNa',12.5/d_num,'gl',0.025/d_num,'tau_h',7,'tau_m',7,'Noffset',0,'Koffset',0};
+s.populations(2).parameters={'gNaP',0.025,'gKs',0.084,...
+    'gdenomK',d_num,'gdenomN',d_num,'gdenoml',d_num}; % ,'tau_h',7,'tau_m',7,'Noffset',0,'Koffset',0};
 s.connections(1).direction='soma->dendrite';
 s.connections(1).mechanism_list={'iCOM'};
 s.connections(1).parameters={'gCOM',gcom};
@@ -43,11 +44,11 @@ if ~isempty(varargin)
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell);
+        data = SimulateModel(s, 'tspan', [0 2000], 'vary', vary_cell);
     
     else
         
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
+        data = SimulateModel(s, 'tspan', [0 2000], 'vary', vary_cell, 'compile_flag', 1);
     
     end
         
@@ -55,11 +56,11 @@ else
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000]);
+        data = SimulateModel(s, 'tspan', [0 1500]);
     
     else
     
-        data=SimulateModel(s, 'tspan', [0 4000], 'compile_flag', 1); %{'pop1','gKs',.04:.002:.06 % ;'pop1','gNaP',.010:.001:.020}); % {'pop1','gd',5:10;'pop1','I_app',10:20});
+        data=SimulateModel(s, 'tspan', [0 1500], 'compile_flag', 1); %{'pop1','gKs',.04:.002:.06 % ;'pop1','gNaP',.010:.001:.020}); % {'pop1','gd',5:10;'pop1','I_app',10:20});
 
     end
         
