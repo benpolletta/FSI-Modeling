@@ -7,7 +7,7 @@ EK = -80
 
 % Functions
 aKCa(@cai) = min((2*10^(-5)).*@cai,.01)
-infKCa(@cai) = aKCa(@cai)./(aKCa(@ca8)+bKCa)
+infKCa(@cai) = aKCa(@cai)./(aKCa(@cai)+bKCa)
 tauKCa(@cai) = 1./(aKCa(@cai)+bKCa)
 IKCa(X,q,@ko) = gKCa*q*(X-EK)
 
