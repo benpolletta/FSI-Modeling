@@ -1,0 +1,13 @@
+% iCa: calcium inward current.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters
+gCa=.25
+ECa=120
+
+% Functions
+minf(X)=1./max(.001,(1+exp(-(X+20)/9)))
+ICa(X)=gCa.*(minf(X).^2).*(X-ECa)
+
+% Linkers
+@current += -ICa(X)
+@ica += ICa(X)

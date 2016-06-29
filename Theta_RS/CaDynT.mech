@@ -1,0 +1,17 @@
+% cai: calcium buffer dynamics (ref: Traub, Jefferys et al. 1994)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters
+cainf = .05 	 % mM, equilibrium Ca2+ concentration
+tauCa = 250 	 % ms, decay time constant
+CAF = 600  	 % calcium accumulation factor
+VshellCa=1;  	 % volume of shell for Ca2+ diffusion
+faraday=96485 	 % ms*A/mmol, Faraday constant
+% note: small tauCa -> cai follows @ica with minimal calcium accumulation
+IC_noise=0
+
+% ODEs
+cai' = -CAF.*@ica./(faraday*VshellCa)+cai/tauCa
+cai(0) = cainf+IC_noise.*rand(1,Npop)
+
+% Interface
+@cai += cai
