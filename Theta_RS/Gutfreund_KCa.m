@@ -1,4 +1,4 @@
-function data = Gutfreund_original(I_const, I_app, varargin)
+function data = Gutfreund_KCa(I_const, I_app, varargin)
 
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
@@ -18,7 +18,8 @@ if ~isempty(varargin)
 end
 
 model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
-    sprintf('{iNaP,iKs,iKDRG,iNaG,gleak}; gKs=0.084; gNaP=0.025; gl=0.025; I_const=%f;', I_const),...    %  halfKs=-60; halfNaP=-60; gNaP=0.0125; 
+    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
+    sprintf('gKs=0.084; gNaP=0.025; gl=0.025; I_const=%f;', I_const),...    %  halfKs=-60; halfNaP=-60; gNaP=0.0125; 
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',...
     'offset=0; Koffset=offset; Noffset=offset;',...     % gKDR=5/3; gNa=12.5/3; gl=0;
     sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
@@ -54,7 +55,7 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, [sprintf('gutfreund_original_Iconst%f_Iapp%f', I_const, I_app), vary_label])
+    save_as_pdf(gcf, [sprintf('Figures/gutfreund_original_Iconst%f_Iapp%f', I_const, I_app), vary_label])
 
 catch error
     

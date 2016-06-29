@@ -18,15 +18,14 @@ eqns = ['dv/dt=I_app*(1+rand(1,N_pop)*.25)+@current/Cm; Cm=.25; v(0)=-65; I_app=
     'monitor functions'];
     % sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
 
-d_num = 1; s_num = 5;
+d_num = 1; s_num = 3;
 
 s=[];
 s.populations(1).name='soma';
 s.populations(1).size=1;
 s.populations(1).equations=eqns;
 s.populations(1).mechanism_list={'iNaG','iKDRG','gleak','iNaP','iKs'};
-s.populations(1).parameters={'gNaP',0.025/s_num,'gKs',0.084/s_num,... % 'halfNaP',-60,'halfKs',-50,...
-    'gKDR',5,'gNa',12.5,'gl',0.025,'Noffset',-17.5,'Koffset',-17.5};
+s.populations(1).parameters={'gKDR',5,'gNa',12.5,'gl',0.025,'Noffset',-17.5,'Koffset',-17.5}; % ,... 'gNaP',0.025/s_num,'gKs',0.084/s_num,'halfNaP',-60,'halfKs',-50};
 s.populations(2).name='dendrite';
 s.populations(2).size=1;
 s.populations(2).equations=eqns;
@@ -70,7 +69,7 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, [sprintf('gutfreund_dendrite_gcom%f_Iapp%f', gcom, I_app), vary_label])
+    save_as_pdf(gcf, [sprintf('Figures/gutfreund_dendrite_gcom%f_Iapp%f', gcom, I_app), vary_label])
 
 catch error
     
