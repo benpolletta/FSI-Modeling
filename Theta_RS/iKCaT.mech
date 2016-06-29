@@ -1,7 +1,7 @@
-% iKCaT: KCa after Traub 2005.
+% iKCaT: KCa after Traub & Jefferys 1994.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-gKCa = .02
+gKCa = .0125
 bKCa = .001
 EK = -80
 
