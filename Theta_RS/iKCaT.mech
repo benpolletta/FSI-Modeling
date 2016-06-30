@@ -4,16 +4,17 @@
 gKCa = .0125
 bKCa = .001
 EK = -80
+IC_noise = 0
 
 % Functions
 aKCa(@cai) = min((2*10^(-5)).*@cai,.01)
 infKCa(@cai) = aKCa(@cai)./(aKCa(@cai)+bKCa)
 tauKCa(@cai) = 1./(aKCa(@cai)+bKCa)
-IKCa(X,q,@ko) = gKCa*q*(X-EK)
+IKCa(X,q) = gKCa*q*(X-EK)
 
 % ODEs
 q' = (infKCa(@cai)-q)./tauKCa(@cai)
 q(0) = infKCa(.05)+IC_noise.*rand(1,Npop)
 
 % Linkers
-@current += -IKCa(X,q,@ko)
+@current += -IKCa(X,q)
