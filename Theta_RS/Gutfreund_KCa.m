@@ -55,7 +55,7 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, [sprintf('Figures/gutfreund_original_Iconst%f_Iapp%f', I_const, I_app), vary_label])
+    save_as_pdf(gcf, [sprintf('Figures/gutfreund_KCa_Iconst%f_Iapp%f', I_const, I_app), vary_label])
 
 catch error
     
