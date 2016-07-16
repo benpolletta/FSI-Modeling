@@ -8,12 +8,12 @@ IC_noise=0
 % Functions
 as(X) = 1.6./(1+exp(-.072*(X-65)))
 bs(X) = 0.02*(X-51.1)./(exp((X-51.1)/5)-1)
-% sinf(X) = as(X)/(as(X)+bs(X))
-% stau(X) = 1./(as(X)+bs(X))
+sinf(X) = as(X)./(as(X)+bs(X))
+stau(X) = 1./(as(X)+bs(X))
 ICa(X) = gCa.*(s.^2).*(X-ECa)
 
 % ODEs & ICs
-s' = as(X).*(1-X)-bs(X).*X % s' = (sinf(X)-s)./stau(X)
+s' = (sinf(X)-s)./stau(X) % s' = as(X).*(1-X)-bs(X).*X % 
 s(0) = as(-65)/(as(-65)+bs(-65))+IC_noise.*rand(1,Npop)
 
 % Linkers
