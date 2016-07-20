@@ -6,7 +6,7 @@ if ~isempty(varargin)
     
     for a = 1:(length(varargin)/2)
         
-        vary_label = [vary_label, sprintf('_%s_%fto%f', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
+        vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
         
         vary_cell(a, :) = {'pop1', varargin{2*a - 1}, varargin{2*a}};
         
