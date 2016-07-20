@@ -6,7 +6,15 @@ if ~isempty(varargin)
     
     for a = 1:(length(varargin)/2)
         
-        vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
+        if isscalar(varargin{2*a})
+            
+            vary_label = [vary_label, sprintf('_%s_%g', varargin{2*a - 1}, varargin{2*a})];
+                
+        else
+        
+            vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
+            
+        end
         
         vary_cell(a, :) = {'pop1', varargin{2*a - 1}, varargin{2*a}};
         
@@ -15,21 +23,22 @@ if ~isempty(varargin)
 end
 
 model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
-    sprintf('{iNaP,iKs,iKDRG,iNaG,gleak}; halfKs=-60; halfNaP=-60; gNaP=0.0125; I_const=%f;', I_const),...
+    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
+    sprintf('halfKs=-60; halfNaP=-60; gNaP=0.0125; I_const=%f;', I_const),...
     'offset=-17; Koffset=offset; Noffset=offset; gdenom=2.5; gKDR=5/gdenom; gNa=12.5/gdenom; gl=0;',... % gdenom=3; gKDR=5/gdenom; gNa=12.5/gdenom; gl=0;'
     'tau_fast=3; tau_h=tau_fast; tau_m=tau_fast;',...
-    sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
+    sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=5500; I_app=%f;', I_app),...
     'monitor functions'];
 
 if ~isempty(varargin)
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell);
+        data = SimulateModel(model_eqns, 'tspan', [0 6000], 'vary', vary_cell);
     
     else
         
-        data = SimulateModel(s, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
+        data = SimulateModel(model_eqns, 'tspan', [0 6000], 'vary', vary_cell, 'compile_flag', 1);
     
     end
     
@@ -37,11 +46,11 @@ else
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 4000]);
+        data = SimulateModel(model_eqns, 'tspan', [0 6000]);
     
     else
     
-        data=SimulateModel(s, 'tspan', [0 4000], 'compile_flag', 1);
+        data=SimulateModel(model_eqns, 'tspan', [0 6000], 'compile_flag', 1);
         
     end
      
@@ -51,7 +60,7 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, [sprintf('gutfreund_Iconst%f_Iapp%f_', I_const, I_app), vary_label])
+    save_as_pdf(gcf, ['Figures/gutfreund_', vary_label])
 
 catch error
     
