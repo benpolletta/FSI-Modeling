@@ -1,4 +1,4 @@
-function data = Gutfreund(I_const, I_app, varargin)
+function [data, name] = Gutfreund(I_const, I_app, varargin)
 
 vary_label = ''; vary_cell = cell(length(varargin)/2, 3);
 
@@ -9,9 +9,9 @@ if ~isempty(varargin)
         if isscalar(varargin{2*a})
             
             vary_label = [vary_label, sprintf('_%s_%g', varargin{2*a - 1}, varargin{2*a})];
-                
+            
         else
-        
+            
             vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
             
         end
@@ -21,6 +21,8 @@ if ~isempty(varargin)
     end
     
 end
+
+name = ['gutfreund', vary_label];
 
 model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
