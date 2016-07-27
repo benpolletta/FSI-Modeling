@@ -19,6 +19,16 @@ end
 
 name = ['gutfreund_KCa', vary_label];
 
+if size(vary_cell, 1) > 2
+
+    no_figures = prod(cellfun(@length, vary_cell(3:end, 3)));
+
+else
+    
+    no_figures = 1;
+    
+end
+
 model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
     sprintf('gKs=0.084; gNaP=0.025; gl=0.025; gCa=0.02; I_const=%f;', I_const),...    %  halfKs=-60; halfNaP=-60; gNaP=0.0125; 
@@ -57,8 +67,20 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, ['Figures/gutfreund_KCa', vary_label])
+    if no_figures > 1
+        
+        for f = 1:no_figures
+            
+            save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)])
+            
+        end
+        
+    else
+    
+        save_as_pdf(gcf, ['Figures/', name])
 
+    end
+    
 catch error
     
     display('PlotData failed:')
