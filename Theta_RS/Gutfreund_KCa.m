@@ -34,18 +34,20 @@ model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
     sprintf('gKs=0.084; gNaP=0.025; gl=0.025; gCa=0.02; I_const=%f;', I_const),...    %  halfKs=-60; halfNaP=-60; gNaP=0.0125; 
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',...
     'offset=0; Koffset=offset; Noffset=offset;',...     % gKDR=5/3; gNa=12.5/3; gl=0;
-    sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
+    sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=0; toff=6000; I_app=%f;', I_app),...
     'monitor functions'];
+
+tspan = 6000;
 
 if ~isempty(varargin)
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 4000], 'vary', vary_cell);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell);
     
     else
         
-        data = SimulateModel(model_eqns, 'tspan', [0 4000], 'vary', vary_cell, 'compile_flag', 1);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'compile_flag', 1);
     
     end
     
@@ -53,11 +55,11 @@ else
     
     if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 4000]);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan]);
     
     else
     
-        data=SimulateModel(model_eqns, 'tspan', [0 4000], 'compile_flag', 1);
+        data=SimulateModel(model_eqns, 'tspan', [0 tspan], 'compile_flag', 1);
         
     end
      
