@@ -1,4 +1,4 @@
-function [data, name] = Gutfreund_KCa(I_const, I_app, varargin)
+function [data, name] = Gutfreund_KCa(I_const, I_app, save_flag, varargin)
 
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
@@ -97,4 +97,10 @@ catch error
     
     display(error)
 
+end
+
+if save_flag
+    
+    save([name, '.mat'], 'data', '-v7.3')
+    
 end
