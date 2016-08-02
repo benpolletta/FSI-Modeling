@@ -110,6 +110,8 @@ for var = 1:length(variables)
     
     for p = 1:no_figures
         
+        figure(handle(p))
+        
         vary_title = '';
         
         vary_name = '';
