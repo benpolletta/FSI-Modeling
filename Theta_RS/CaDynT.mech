@@ -1,7 +1,7 @@
 % cai: calcium buffer dynamics (ref: Traub, Jefferys et al. 1994)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
-cainf = .05 	 % mM, equilibrium Ca2+ concentration
+cainf = 0 	 % mM, equilibrium Ca2+ concentration
 tauCa = 250 	 % ms, decay time constant
 CAF = 24  	 % calcium accumulation factor % 600
 % VshellCa=1;  	 % volume of shell for Ca2+ diffusion

@@ -1,4 +1,4 @@
-function [data, name] = Gutfreund_KCa(I_const, I_app, save_flag, varargin)
+function [data, name] = Gutfreund_KCa(I_const, tspan, save_flag, varargin)
 
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
@@ -37,15 +37,16 @@ else
     
 end
 
-tspan = 6000;
+I_app = 0;
 
-model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
-    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
+model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
+    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT,iPeriodicPulses};',...
     sprintf('gKs=0.084; gNaP=0.025; gl=0.025; gCa=0.02; I_const=%f;', I_const),...    %  halfKs=-60; halfNaP=-60; gNaP=0.0125; 
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',...
     'offset=0; Koffset=offset; Noffset=offset;',...     % gKDR=5/3; gNa=12.5/3; gl=0;
-    'I(t)=I_app*((t/500)*(t<500)+(ton<t&t<toff))*(1+rand*.25)*((1-pulse/2)+pulse*(mod(t,750)<250&t>ton));',...
-    sprintf('pulse = .1; ton=500; toff=6000; I_app=%f;', I_app),... %  (ton<t&t<toff)
+    'I(t)=I_app*((t/500)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25)*((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
+    sprintf('pulse = .1; ton=500; toff=%f; I_app=%f;', tspan, I_app),... %  (ton<t&t<toff) 
+    'PPstim = 0; PPfreq = 1.5; PPwidth = 250; PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms
     'monitor functions'];
 
 if ~isempty(varargin)
