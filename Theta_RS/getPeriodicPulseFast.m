@@ -1,5 +1,5 @@
 
-function s3 = getPeriodicPulseFast(freq,width,shift,T,dt,onset,offset,ap_pulse_num,ap_pulse_delay,Npop,kernel_type,width2_rise,plot_demo_on)
+function s3 = getPeriodicPulseFast(freq,width,shift,T,dt,onset,offset,Npop,kernel_type,width2_rise,plot_demo_on)
 
 % Comment this out because it gets confusing.
 % if nargin < 5
@@ -25,20 +25,10 @@ function s3 = getPeriodicPulseFast(freq,width,shift,T,dt,onset,offset,ap_pulse_n
 t=(0:dt:T)';                            % Generate times vector
 s = zeros(size(t));
 pulse_period=1000/freq;
-s((1+round(shift/dt)):round(pulse_period/dt):end) = 1;    % Add deltas, allowing for shift
-
-% Set aperiodic pulse
-if ap_pulse_num > 0
-    ap_ind_orig = 1+round(shift/dt)+round(pulse_period/dt)*(ap_pulse_num-1);    % Index of the aperiodic pulse in the time series.
-    ap_ind_new = ap_ind_orig+round(ap_pulse_delay/dt);          % Index of where it should appear after the delay.
-    if ap_ind_new > length(s) || ap_ind_orig > length(s); error('Aperiodic spike placement would be outside of simulation time.'); end
-    s(ap_ind_orig) = 0;                 % Delete the original pulse
-    s(ap_ind_new) = 1;                  % Create pulse at the delayed location
-end
+s((1+round(shift/dt)):round(pulse_period/dt):end) = 1;    % Add deltas, allowing for shift.
 
 % Remove anything outside of onset to offset
 s(t<onset | t>offset) = 0;
-
 
 % Build kernel
 if kernel_type == 0
@@ -52,6 +42,16 @@ if kernel_type == 0
         % Build kernel
         kernel = (exp(-t2/width) - exp(-t2/width2_rise)) * (width*width2_rise)/(width-width2_rise);     % This normalization constant is wrong
         kernel = kernel / max(kernel);          % Do normalization manually for now.
+elseif kernel_type == -1
+        % Build kernel time series
+        kernel_length=4*width;                      % Length of kernel time series
+        t2a = [0:-dt:-kernel_length];
+        t2b = [0:dt:kernel_length-dt];
+        t2 = [fliplr(t2a(2:end)), 0, t2b(2:end)];   % This affords us a bit more control over the time values, ensuring it is centered at zero.
+        %t2 = -kernel_length:dt:kernel_length-dt;    % Generate time vector
+        
+        % Build kernel
+        kernel = exp(-t2.^2/width^2);      % Build kernel. Peaks at 1.0.
 elseif kernel_type > 0
         % Build kernel time series
         kernel_length=4*width;                      % Length of kernel time series
@@ -61,11 +61,22 @@ elseif kernel_type > 0
         %t2 = -kernel_length:dt:kernel_length-dt;    % Generate time vector
         
         % Build kernel
-        kernel = exp(-t2.^2/2/width^2).^kernel_type;      % Build kernel. Peaks at 1.0.
+        kernel = double(zeros(size(t2)) + abs(t2) < ((width - width/kernel_type)/2 + 1));      % Build smoothing kernel.
+        t3a = [0:-dt:-kernel_length];
+        t3b = [0:dt:kernel_length-dt];
+        t3 = [fliplr(t3a(2:end)), 0, t3b(2:end)];   % This affords us a bit more control over the time values, ensuring it is centered at zero.
+        %t2 = -kernel_length:dt:kernel_length-dt;    % Generate time vector
+        
+        % Build kernel
+        smooth_kernel = exp(-t3.^2/(width/kernel_type)^2);      % Build kernel. Peaks at 1.0.
+        kernel = conv(kernel, smooth_kernel, 'same');
+        
 else
         % For debugging; should not reach this!!
         error ('kernel_type should be either 1 (double exponential) or n (Gaussian^n).');
 end
+
+kernel = kernel./max(kernel);
 
 kernel = kernel(:);
 
@@ -88,26 +99,31 @@ for i = 1:length(ind)
     
 end
 
-s3=s2;
-
+% s3=s2;
+% 
+% % Convolve kernel with deltas
+% s2=conv(s,kernel(:));
+N2=length(s2); N=length(s);
+starting = round((N2-N)/2);
+s3=s2(1+starting:N+starting);       % Each edge we're dropping should be half the difference in the length of the two vectors.
+%s2=wkeep(s2,length(s),'c');        % wkeep doesn't work with compiled code
 
 if plot_demo_on                 % Plot if desired
 
-    % Convolve kernel with deltas
-    s2=conv(s,kernel(:));
-    N2=length(s2); N=length(s);
-    starting = round((N2-N)/2);
-    s3=s2(1+starting:N+starting);       % Each edge we're dropping should be half the difference in the length of the two vectors.
-    %s2=wkeep(s2,length(s),'c');        % wkeep doesn't work with compiled code
-
     figure; 
-    subplot(211); plot(t,s);
-    t2=[1:length(s2)]*dt;
-    t3=t2(1+starting:N+starting);
+    subplot(311); plot(t,s);
+    plot_t2=[1:length(s2)]*dt;
+    plot_t3=plot_t2(1+starting:N+starting);
+    axis tight
     legend('Delta train');
-    subplot(212); plot(t2,s2);
-    hold on; plot(t3,s3);
+    subplot(312); plot(t2,kernel);
+    axis tight
+    legend('Kernel');
+    subplot(313); plot(plot_t2,s2);
+    hold on; plot(plot_t3,s3);
+    axis tight
     legend('Original convolution','Keep only center');
+    
 end
 
 
