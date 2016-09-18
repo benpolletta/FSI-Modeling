@@ -1,4 +1,4 @@
-function results = phase_metrics(data, varargin)
+function results = phase_metrics(data, varargin, figure_flag)
 
 if ~isempty(varargin)
     
@@ -18,6 +18,8 @@ v = getfield(data, variable);
 
 t = data.time;
 
+input = data.pop1_iPeriodicPulses_Iext;
+
 sampling_freq = 1000*length(t)/t(end);
 
 %% Getting peak frequency.
@@ -32,19 +34,59 @@ v_hat_smoothed = conv(v_hat, gauss_kernel, 'same');
 
 max_freq = f(v_hat_smoothed == max(v_hat_smoothed));
 
-freqs = [1.5 4.5 max_freq]; no_cycles = [3 3 3];
+freqs = [1.5 4.5 max_freq]'; no_cycles = [7 7 7]'; no_freqs = length(freqs);
 
 %% Getting wavelet components.
 
-v_bandpassed = wavelet_spectrogram(v, sampling_freq, freqs, no_cycles, 0, '');
+v_bandpassed(:, 1) = wavelet_spectrogram(-input, sampling_freq, freqs(1), no_cycles(1), 0, '');
 
-v_phase = angle(wavelet_spectrogram);
+v_bandpassed(:, 2:3) = wavelet_spectrogram(v, sampling_freq, freqs(2:3), no_cycles(2:3), 0, '');
+
+v_phase = angle(v_bandpassed);
+
+if figure_flag
+
+    figure, subplot(4, 1, 1), plot(f(f <= 15), v_hat(f <= 15))
+    
+    t_end = t >= 0; % 3000;
+    
+    for frequency = 1:3, 
+        
+        subplot(4, 2, 2 + 2*(frequency - 1) + 1)
+        
+        plotyy(t(t_end), real(v_bandpassed(t_end, frequency)), t(t_end), v(t_end))
+    
+        subplot(4, 2, 2 + 2*(frequency - 1) + 2)
+        
+        plotyy(t(t_end), angle(v_bandpassed(t_end, frequency)), t(t_end), v(t_end))
+        
+    end
+    
+end
 
 %% Getting spike times and computing spike phases.
 
 v_spikes = [diff(v > 0) == 1; zeros(size(v, 2))];
 
-v_spike_phases = v_phase(logical(v_spikes));
+v_spike_phases = v_phase(repmat(logical(v_spikes), 1, no_freqs));
+
+if figure_flag
+   
+    figure
+    
+    subplot(2, 1, 1)
+    
+    plotyy(t, v, t, v_spikes)
+    
+    for i = 1:3
+        
+        subplot(2, 3, 3 + i)
+        
+        rose(gca, v_spike_phases(:, i))
+    
+    end
+    
+end
 
 %% Computing phase-phase relationships.
 
@@ -52,7 +94,7 @@ no_bins = 18;
 
 bin_centers = 1:no_bins;
 
-bin_centers = (bin_centers - 1)*2*pi/no_bins - pi*(nobins - 1)/no_bins;
+bin_centers = (bin_centers - 1)*2*pi/no_bins - pi*(no_bins - 1)/no_bins;
 
 bin_left_endpoints = bin_centers - pi/no_bins;
 
