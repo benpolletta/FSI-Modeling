@@ -1,0 +1,22 @@
+%%
+% Poisson mechanism based on Jason's email implementation. For some
+% reason this produces huge PSPs
+
+% Parameters
+PPstim = -.1;
+PPon = 2000;
+PPwidth = 250; % in ms
+
+% Time series properties
+Tend=T(end); 	    % ms, max simulation duration
+dt=0.01;        % ms, time step duration
+kernel_type = 7;
+s = getPulseFast(PPon,PPwidth,Tend,dt,Npop,kernel_type,0);
+
+% Functions
+Pulse(X) = s(k, :)
+Iext(X) = PPstim*Pulse(X)
+
+% Linkers
+@current += -Iext(X)
+
