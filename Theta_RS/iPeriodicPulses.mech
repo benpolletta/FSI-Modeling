@@ -14,14 +14,10 @@ dt=0.01;        % ms, time step duration
 PPonset = 500;    % ms, onset time
 PPoffset = Inf;   % ms, offset time
 
-% Aperiodic pulse specification
-ap_pulse_num = 0;   % The pulse number that should be delayed. 0 for no aperiodicity.
-ap_pulse_delay = 0;  % ms, the amount the spike should be delayed. 0 for no aperiodicity.
-
 kernel_type = 7;
 width2_rise = 0.25;
 
-s2=getAperiodicPulseFast(PPfreq,PPwidth,PPshift,Tend,dt,PPonset,PPoffset,ap_pulse_num,ap_pulse_delay,Npop,kernel_type,width2_rise,0);
+s2=getPeriodicPulseFast(PPfreq,PPwidth,PPshift,Tend,dt,PPonset,PPoffset,Npop,kernel_type,width2_rise,0);
 
 Iext(X)=PPstim*s2(k,:)
 @current += -Iext(X)
