@@ -1,13 +1,10 @@
 function STO_phase_experiment
 
-I_app = 0.2;
-tauCa = 300;
-gKCa = 0.005;
-aKCa_factor = 0.1;
-CAF = 24;
-pulse = 0;
+tic; [data, name] = Gutfreund_original(0,0,'PPwidth',[100 250 500 750 1000],...
+    'PPstim',-[0 .25 .5 .75 1]*10^(-4),'kernel_type',[1 3 7 15],...
+    'I_app',.125,'gNa',0,'gKDR',0,'gl',0); toc;
 
-[data, name] = Gutfreund_original(0, 0, 'I_app', I_app, 'pulse', pulse);
+
 
 
 

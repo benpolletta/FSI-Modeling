@@ -53,7 +53,7 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1);
     
     % else
     % 
@@ -65,7 +65,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan]);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1);
     
     % else
     % 
