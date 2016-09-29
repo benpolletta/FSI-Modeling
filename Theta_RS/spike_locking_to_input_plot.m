@@ -1,4 +1,4 @@
-function results = spike_locking_to_input_plot(data, results)
+function results = spike_locking_to_input_plot(data, results, name)
 
 if isempty(results)
     
@@ -30,7 +30,7 @@ figure
 
 for s = 1:no_studies
     
-    v(:, s) = getfield(data(s), 'pop1_v');
+    % v(:, s) = getfield(data(s), 'pop1_v');
     
     peak_freqs(s) = results(s).peak_freq;
     
@@ -50,10 +50,6 @@ for s = 1:no_studies
     
     hold on
     
-    multiplier = 10;
-    
-    compass(multiplier*real(v_mean_spike_mrvs(s, 1, 1)), multiplier*imag(v_mean_spike_mrvs(s, 1, 1)), 'k')
-    
     title(sprintf('%.3g Hz Spike Phases', data(s).pop1_PPfreq))
     
     % v_mean_spike_phases(s, :, :) = circ_mean(results(s).v_spike_phases);
@@ -63,6 +59,18 @@ for s = 1:no_studies
 end
 
 linkaxes(ax)
+
+for s = 1:no_studies
+   
+    subplot(r, c, s)
+    
+    multiplier = max(max(xlim), max(ylim));
+    
+    compass(multiplier*real(v_mean_spike_mrvs(s, 1, 1)), multiplier*imag(v_mean_spike_mrvs(s, 1, 1)), 'k')
+    
+end
+
+save_as_pdf(gcf, [name, '_rose'])
 
 figure,
 
@@ -77,5 +85,7 @@ title('Spike PLV to Input by Freq.', 'FontSize', 16)
 xlabel('Freq. (Hz)', 'FontSize', 14)
 
 ylabel('Spike PLV', 'FontSize', 14)
+
+save_as_pdf(gcf, [name, '_MRV'])
 
 

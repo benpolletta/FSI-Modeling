@@ -19,6 +19,7 @@ width2_rise = 0.25;
 
 s2=getPeriodicPulseFast(PPfreq,PPwidth,PPshift,Tend,dt,PPonset,PPoffset,Npop,kernel_type,width2_rise,0);
 
-Iext(X)=PPstim*s2(k,:)
+input(X)=s2(k,:)
+Iext(X)=PPstim*input(X)
 @current += -Iext(X)
 
