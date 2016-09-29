@@ -47,14 +47,14 @@ model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
     'fast_denom=1; gKDR=5/fast_denom; gNa=12.5/fast_denom;',...
     'I(t)=I_app*((t/500)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25)*((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
     sprintf('pulse = .1; ton=500; toff=%f; I_app=%f;', tspan, I_app),... %  (ton<t&t<toff) 
-    'PPstim = 0; PPfreq = 1.5; PPwidth = 250; PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms
+    'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms
     'monitor functions'];
 
 if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 100);
     
     % else
     % 
@@ -66,7 +66,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 100);
     
     % else
     % 
