@@ -127,6 +127,8 @@ if plot_demo_on                 % Plot if desired
 end
 
 
+s3 = s3 - mean(s3);
+
 s3 = repmat(s3(:),[1,Npop]);
     
 end

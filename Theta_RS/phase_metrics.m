@@ -12,6 +12,10 @@ if ~isempty(varargin)
             
             figure_flag = varargin{2*v};
             
+        elseif strcmp(varargin{2*v - 1}, 'no_periods')
+            
+            no_periods = varargin{2*v};
+            
         end
         
     end
@@ -21,6 +25,8 @@ end
 if ~exist('variable', 'var'), variable = 'pop1_v'; end
 
 if ~exist('figure_flag', 'var'), figure_flag = 0; end
+
+if ~exist('no_periods', 'var'), no_periods = 1; end
 
 v = getfield(data, variable);
 
@@ -42,7 +48,7 @@ v_hat_smoothed = conv(v_hat, gauss_kernel, 'same');
 
 peak_freq = f(v_hat_smoothed == max(v_hat_smoothed));
 
-freqs = [1.5 4.5 peak_freq]'; no_cycles = [7 7 7]'; no_freqs = length(freqs);
+freqs = [data.pop1_PPfreq 4.5 peak_freq]'; no_cycles = [7 7 7]'; no_freqs = length(freqs);
 
 %% Getting wavelet components.
 
@@ -90,7 +96,7 @@ end
 
 v_spikes = [diff(v > 0) == 1; zeros(1, size(v, 2))];
 
-no_periods = 2; pd_length = t(end)/no_periods; t_pd = nan(length(t), no_periods);
+pd_length = t(end)/no_periods; t_pd = nan(length(t), no_periods);
 
 no_spikes = nan(no_periods, 1);
 
