@@ -84,13 +84,13 @@ try
         
         for f = 1:no_figures
             
-            save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)])
+            save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)], '-v7.3')
             
         end
         
     else
     
-        save_as_pdf(gcf, ['Figures/', name])
+        save_as_pdf(gcf, ['Figures/', name], '-v7.3')
 
     end
     
