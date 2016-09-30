@@ -34,7 +34,7 @@ t = data.time;
 
 input = data.pop1_iPeriodicPulses_input;
 
-sampling_freq = 1000*length(t)/t(end);
+sampling_freq = round(1000*length(t)/t(end));
 
 %% Getting peak frequency.
 
