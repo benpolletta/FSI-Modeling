@@ -8,19 +8,15 @@ end
 
 no_studies = length(results);
 
-no_freqs = size(results(1).v_spike_phases, 3);
+% no_freqs = size(results(1).v_spike_phases, 3);
+% 
+% no_periods = size(results(1).v_spike_phases, 2);
 
-no_periods = size(results(1).v_spike_phases, 2);
-
-vsp_index = 0;
+% vsp_index = 0;
 
 % t = data(1).time;
 
-v_mean_spike_mrvs = nan(no_studies, no_periods, no_freqs);
-    
-peak_freqs = nan(no_studies, 1);
-
-no_input_freqs = length(unique([data(:).pop1_PPfreq]));
+% no_input_freqs = length(unique([data(:).pop1_PPfreq]));
 
 varied = data(1).varied;
 
@@ -50,8 +46,6 @@ vary_vectors(vary_lengths <= 1) = [];
 
 vary_lengths(vary_lengths <= 1) = [];
 
-no_varied = length(vary_lengths) - 2;
-
 if vary_lengths(1) <= 10 && vary_lengths(2) <= 10
 
     no_cols = vary_lengths(1); no_rows = vary_lengths(2);
@@ -62,19 +56,23 @@ else
     
     vary_labels(3:(end + 1)) = vary_labels(2:end);
     
-    vary_labels(1:2) = vary_labels{1};
+    vary_labels(1:2) = vary_labels(1);
     
-    vary_vectors(3:(end + 1)) = vary_labels(2:end);
+    vary_vectors(3:(end + 1)) = vary_vectors(2:end);
     
-    vary_labels(1:2) = vary_labels{1};
+    vary_vectors(1:2) = vary_vectors(1);
     
     vary_lengths(3:(end + 1)) = vary_lengths(2:end);
     
-    vary_lengths(1:2) = vary_lengths{1};
+    vary_lengths(1:2) = vary_lengths(1);
 
 end
 
+no_varied = length(vary_lengths) - 2;
+
 no_figures = prod(vary_lengths(3:end));
+
+[peak_freqs, v_mean_spike_mrvs] = deal(nan(no_rows, no_cols, no_figures));
 
 if no_figures > 1
     
@@ -114,6 +112,8 @@ end
 %     
 % end
 
+figure_labels = cell(no_figures, 1);
+
 for f = 1:no_figures
     
     figure(f)
@@ -124,21 +124,54 @@ for f = 1:no_figures
        
         figure_index = figure_index & ([data.(vary_labels{v + 2})] == figure_params(f, v));
         
+        if v == 1
+        
+            figure_labels{f} = [vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
+            
+        else
+        
+            figure_labels{f} = [figure_labels{f}, '; ', vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
+            
+        end
+        
     end
     
-    for r = 1:no_rows % for s = 1:no_studies
-        
-        row_index = figure_index & ([data.(vary_labels{2})] == vary_vectors{2}(r));
+    for r = 1:no_rows
         
         for c = 1:no_cols
-        
-            study_index = row_index & ([data.(vary_labels{1})] == vary_vectors{1}(c));
+                
+            s = (r - 1)*no_cols + c;
             
-            % v(:, s) = getfield(data(s), 'pop1_v');
+            if strcmp(vary_labels{1}, vary_labels{2})
+                
+                if s <= vary_lengths(1)
+                    
+                    study_index = figure_index & ([data.(vary_labels{1})] == vary_vectors{1}(s));
+                    
+                    study_label = [vary_labels{1}, ' = ', num2str(vary_vectors{1}(s), '%.3g')];
+                    
+                else
+                    
+                    study_index = zeros(size(figure_index));
+                    
+                    study_label = '';
+                    
+                end
+                
+            else
+                
+                row_index = figure_index & ([data.(vary_labels{2})] == vary_vectors{2}(r));
+                
+                study_index = row_index & ([data.(vary_labels{1})] == vary_vectors{1}(c));
+                
+                study_label = [vary_labels{1}, ' = ', num2str(vary_vectors{1}(c), '%.3g'),...
+                    ', ', vary_labels{2}, ' = ', num2str(vary_vectors{2}(r), '%.3g')];
+                
+            end
             
             peak_freqs(r, c, f) = results(study_index).peak_freq;
             
-            no_spikes = size(results(study_index).v_spike_phases, 1);
+            % no_spikes = size(results(study_index).v_spike_phases, 1);
             
             % v_spike_phases(vsp_index + (1:no_spikes), :, :) = results(s).v_spike_phases;
             
@@ -147,30 +180,38 @@ for f = 1:no_figures
             v_mean_spike_mrvs(r, c, f) = mean_spike_mrvs(1); % circ_r(results(s).v_spike_phases); %
             
             % f_index = mod(s - 1, no_input_freqs) + 1;
-            % 
+            %
             % o_index = ceil(s/no_input_freqs);
-             
-            subplot_index = (r - 1)*no_cols + c; % no_other_conditions*(f_index - 1) + o_index;
             
-            ax(r, c, f) = subplot(no_rows, no_cols, subplot_index); % no_input_freqs, no_other_conditions, (f_index - 1)*no_other_conditions + o_index)
+            % subplot_index = (r - 1)*no_cols + c; % no_other_conditions*(f_index - 1) + o_index;
+            
+            ax(r, c, f) = subplot(no_rows, no_cols, s); % no_input_freqs, no_other_conditions, (f_index - 1)*no_other_conditions + o_index)
             
             rose(gca, results(study_index).v_spike_phases(:, 1, 1)) % , 60)
             
             hold on
             
-            title(sprintf('%.3g Hz Spike Phases', data(study_index).pop1_PPfreq))
+            title(study_label, 'interpreter', 'none')
+            
+            % if ~strcmp(vary_labels{1}, vary_labels{2})
+            % 
+            %     ylabel([num2str(data(study_index).(vary_labels{2}), '%.3g'), ' ', vary_labels{2}])
+            % 
+            % end
             
             % v_mean_spike_phases(s, :, :) = circ_mean(results(s).v_spike_phases);
             
-            vsp_index = vsp_index + no_spikes;
+            % vsp_index = vsp_index + no_spikes;
             
         end
-        
+    
     end
-        
-    % linkaxes(reshape(ax(:, :, f), no_rows*no_cols, 1))
+    
+    mtit(gcf, figure_labels{f}, 'FontSize', 16)
     
 end
+
+% linkaxes(reshape(ax(:, :, f), no_rows*no_cols, 1))
 
 for f = 1:no_figures
     
@@ -180,7 +221,9 @@ for f = 1:no_figures
         
         for c = 1:no_cols
             
-            subplot(r, c, f)
+            s = (r - 1)*no_cols + c;
+            
+            subplot(no_rows, no_cols, s)
             
             multiplier = max(max(xlim), max(ylim));
             
@@ -194,21 +237,41 @@ end
 
 save_as_pdf(gcf, [name, '_rose'])
 
-for f = 1:no_figures,
+% if strcmp(vary_labels{1}, vary_labels{2})
+%     
+%     v_mean_spike_mrvs = reshape(v_mean_spike_mrvs, no_rows*no_cols, no_figures);
+%     
+% end
+
+if strcmp(vary_labels{1}, vary_labels{2})
     
-    figure,
+    data_for_plot = reshape(v_mean_spike_mrvs, no_rows*no_cols, no_figures);
     
-    plot([data(:).pop1_PPfreq]', abs(v_mean_spike_mrvs(:, :, f))')
+else
+    
+    data_for_plot = v_mean_spike_mrvs;
+    
+end
+
+no_figures = size(data_for_plot, 3);
+
+for f = 1:no_figures
+
+    figure
+    
+    plot(sort(unique([data(:).(vary_labels{1})]))', abs(data_for_plot(:, :, f))')
     
     axis tight
     
     ylim([0 1])
     
-    title('Spike PLV to Input by Freq.', 'FontSize', 16)
+    title(['Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16)
     
-    xlabel('Freq. (Hz)', 'FontSize', 14)
+    xlabel(vary_labels{1}, 'FontSize', 14)
     
     ylabel('Spike PLV', 'FontSize', 14)
+    
+    legend(figure_labels)
     
     if f > 1
         
