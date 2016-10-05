@@ -236,10 +236,18 @@ for f = 1:no_figures
         end
         
     end
+
+    if no_figures > 1
+    
+        save_as_pdf(gcf, [name, '_rose_', num2str(f)])
+    
+    else
+        
+        save_as_pdf(gcf, [name, '_rose'])
+        
+    end
     
 end
-
-save_as_pdf(gcf, [name, '_rose'])
 
 % if strcmp(vary_labels{1}, vary_labels{2})
 %     
@@ -311,7 +319,7 @@ for f = 1:no_figures
     
     ylabel('Number of Spikes', 'FontSize', 14)
     
-    if f > 1
+    if no_figures > 1
         
         save_as_pdf(gcf, [name, '_MRV_', num2str(f)])
         
