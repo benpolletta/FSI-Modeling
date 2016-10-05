@@ -120,6 +120,8 @@ for f = 1:no_figures
     
     figure_index = ones(1, length(data));
     
+    figure_labels{f} = 'Spike Locking to Input';
+    
     for v = 1:no_varied
        
         figure_index = figure_index & ([data.(vary_labels{v + 2})] == figure_params(f, v));
@@ -247,9 +249,9 @@ save_as_pdf(gcf, [name, '_rose'])
 
 if strcmp(vary_labels{1}, vary_labels{2})
     
-    mrv_for_plot = reshape(v_mean_spike_mrvs, no_rows*no_cols, no_figures);
+    mrv_for_plot = reshape(permute(v_mean_spike_mrvs, [2 1 3:length(size(v_mean_spike_mrvs))]), no_rows*no_cols, no_figures);
     
-    nspikes_for_plot = reshape(no_spikes, no_rows*no_cols, no_figures);
+    nspikes_for_plot = reshape(permute(no_spikes, [2 1 3:length(size(no_spikes))]), no_rows*no_cols, no_figures);
     
 else
     
