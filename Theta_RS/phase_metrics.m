@@ -36,6 +36,8 @@ input = data.pop1_iPeriodicPulses_input;
 
 sampling_freq = round(1000*length(t)/t(end));
 
+v = v(t >= 1000); input = input(t >= 1000); t = t(t >= 1000);
+
 %% Getting peak frequency.
 
 [v_hat, f] = pmtm(detrend(v), 2, [], sampling_freq, 'eigen');
@@ -96,7 +98,7 @@ end
 
 v_spikes = [diff(v > 0) == 1; zeros(1, size(v, 2))];
 
-pd_length = t(end)/no_periods; t_pd = nan(length(t), no_periods);
+pd_length = (t(end) - t(1))/no_periods; t_pd = nan(length(t), no_periods);
 
 no_spikes = nan(no_periods, 1);
 

@@ -72,7 +72,7 @@ no_varied = length(vary_lengths) - 2;
 
 no_figures = prod(vary_lengths(3:end));
 
-[peak_freqs, v_mean_spike_mrvs] = deal(nan(no_rows, no_cols, no_figures));
+[peak_freqs, v_mean_spike_mrvs, no_spikes] = deal(nan(no_rows, no_cols, no_figures));
 
 if no_figures > 1
     
@@ -177,6 +177,8 @@ for f = 1:no_figures
             
             mean_spike_mrvs = nanmean(exp(sqrt(-1)*results(study_index).v_spike_phases));
             
+            no_spikes(r, c, f) = size(results(study_index).v_spike_phases, 1);
+            
             v_mean_spike_mrvs(r, c, f) = mean_spike_mrvs(1); % circ_r(results(s).v_spike_phases); %
             
             % f_index = mod(s - 1, no_input_freqs) + 1;
@@ -245,33 +247,67 @@ save_as_pdf(gcf, [name, '_rose'])
 
 if strcmp(vary_labels{1}, vary_labels{2})
     
-    data_for_plot = reshape(v_mean_spike_mrvs, no_rows*no_cols, no_figures);
+    mrv_for_plot = reshape(v_mean_spike_mrvs, no_rows*no_cols, no_figures);
+    
+    nspikes_for_plot = reshape(no_spikes, no_rows*no_cols, no_figures);
     
 else
     
-    data_for_plot = v_mean_spike_mrvs;
+    mrv_for_plot = v_mean_spike_mrvs;
+    
+    nspikes_for_plot = no_spikes;
     
 end
 
-no_figures = size(data_for_plot, 3);
+no_figures = size(mrv_for_plot, 3);
 
 for f = 1:no_figures
 
     figure
     
-    plot(sort(unique([data(:).(vary_labels{1})]))', abs(data_for_plot(:, :, f))')
+    subplot(3, 1, 1)
+    
+    plot(vary_vectors{1}', abs(mrv_for_plot(:, :, f))')
     
     axis tight
     
     ylim([0 1])
     
-    title(['Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16)
+    title(['Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
     
-    xlabel(vary_labels{1}, 'FontSize', 14)
+    xlabel(vary_labels{1}, 'FontSize', 14, 'interpreter', 'none')
     
     ylabel('Spike PLV', 'FontSize', 14)
     
     legend(figure_labels)
+    
+    subplot(3, 1, 2)
+    
+    adjusted_plv = ((abs(mrv_for_plot(:, :, f)).^2).*nspikes_for_plot(:, :, f) - 1)./(nspikes_for_plot(:, :, f) - 1);
+    
+    plot(vary_vectors{1}, adjusted_plv') % (unique([data(:).(vary_labels{1})])', adjusted_plv')
+    
+    axis tight
+    
+    ylim([0 1])
+    
+    title(['Adjusted Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
+    
+    xlabel(vary_labels{1}, 'FontSize', 14, 'interpreter', 'none')
+    
+    ylabel('Spike PLV', 'FontSize', 14)
+    
+    subplot(3, 1, 3)
+    
+    plot(vary_vectors{1}, nspikes_for_plot(:, :, f)')
+    
+    axis tight
+    
+    title(['Number of Spikes by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
+    
+    xlabel(vary_labels{1}, 'FontSize', 14, 'interpreter', 'none')
+    
+    ylabel('Number of Spikes', 'FontSize', 14)
     
     if f > 1
         
