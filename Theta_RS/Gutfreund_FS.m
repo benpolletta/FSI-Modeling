@@ -42,8 +42,8 @@ I_const = 0; I_app = 0;
 model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',...
     'fast_denom=1; gKDR=5/fast_denom; gNa=12.5/fast_denom;',...
-    'I(t)=I_app*((t/500)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
-    sprintf('PPstim = 0; ton=500; toff=%f; I_app=%f; I_const=%f;', tspan, I_app, I_const),... %  (ton<t&t<toff)
+    'I(t)=I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25); ton=500;',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
+    sprintf('toff=%f; I_app=%f; I_const=%f;', tspan, I_app, I_const),... %  (ton<t&t<toff)
     'monitor functions'];
 
 % Setting up structure containing info for two populations.
@@ -52,7 +52,7 @@ s = [];
 s.populations(1).name = 'RS';
 s.populations(1).size = 1;
 s.populations(1).equations = model_eqns;
-s.populations(1).mechanism_list = {'iNaP','iKs','iKDRG','iNaG','gleak','CaDynT','iCaT','iKCaT','iPeriodicPulses'};
+s.populations(1).mechanism_list = {'iNaP','iKs','iKDRG','iNaG','gleak','CaDynT','iCaT','iKCaT'};
 %s.populations(1).parameters = {'Iapp',5,'gNa',120,'gK',36,'noise',40};
 % FS cells.
 s.populations(2).name = 'FS';

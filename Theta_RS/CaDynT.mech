@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 cainf = 0 	 % mM, equilibrium Ca2+ concentration
-tauCa = 250 	 % ms, decay time constant
+tauCa = 100 % 250 	 % ms, decay time constant
 CAF = 24  	 % calcium accumulation factor % 600
 % VshellCa=1;  	 % volume of shell for Ca2+ diffusion
 % faraday=96485 	 % ms*A/mmol, Faraday constant
