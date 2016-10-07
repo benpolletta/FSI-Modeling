@@ -63,11 +63,11 @@ s.populations(2).parameters = {'Iapp',0,'gNa',12.5,'gK',5};
 % FS->RS GABA synapses.
 s.connections(1).direction = 'FS->RS';
 s.connections(1).mechanism_list = {'iGABAa'};
-s.connections(1).parameters = {'tauD',10,'gSYN',.1,'netcon','ones(N_pre,N_post)'};
+s.connections(1).parameters = {'tauD',10,'gSYN',.1,'netcon','eye(N_pre,N_post)'};
 % RS->FS AMPA synapses.
 s.connections(2).direction = 'RS->FS';
 s.connections(2).mechanism_list = {'iAMPA'};
-s.connections(2).parameters = {'tauD',2,'gSYN',.1,'netcon','ones(N_pre,N_post)'};
+s.connections(2).parameters = {'tauD',2,'gSYN',.1,'netcon','eye(N_pre,N_post)'};
 
 if ~isempty(varargin)
     

@@ -1,8 +1,8 @@
 % function v_n_figures(no_rows, no_cols)
 
-no_rows = 5;
+no_rows = 11;
 
-no_cols = 15;
+no_cols = 3;
 
 figure,
 
@@ -10,11 +10,11 @@ for s = 1:no_rows*no_cols,
 
     subplot(no_rows, no_cols, s) 
     
-    plot(data(s).pop1_v, data(s).pop1_iKs_n)
+    plot(data(s).pop1_v, data(s).pop1_iKsconst_n)
     
     box off
     
-    ylim([0 .8])
+    ylim([0 .7])
     xlim([-85 0])
 
     if mod(s, no_cols) == 1
@@ -31,7 +31,7 @@ for s = 1:no_rows*no_cols,
     
     if ceil(s/no_cols) == 1, 
     
-        title(['g_{K_s} = ', num2str(data(s).pop1_gKs, '%.3g')],'FontSize',16)
+        title(['\tau_{K_s} = ', num2str(data(s).pop1_tauKs, '%.3g')],'FontSize',16)
     
     end
     
