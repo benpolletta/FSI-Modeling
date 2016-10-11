@@ -58,8 +58,8 @@ s.populations(1).mechanism_list = {'iNaP','iKs','iKDRG','iNaG','gleak','CaDynT',
 s.populations(2).name = 'FS';
 s.populations(2).size = 1;
 s.populations(2).equations = model_eqns;
-s.populations(2).mechanism_list = {'iNa','iK'};
-s.populations(2).parameters = {'Iapp',0,'gNa',12.5,'gK',5};
+s.populations(2).mechanism_list = {'iNaG','iKDRG','gleak'};
+s.populations(2).parameters = {'Iapp',0}; % ,'gNa',12.5,'gK',5};
 % FS->RS GABA synapses.
 s.connections(1).direction = 'FS->RS';
 s.connections(1).mechanism_list = {'iGABAa'};
