@@ -3,7 +3,7 @@ function [data, name] = Gutfreund_FS(tspan, save_flag, varargin)
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
 
-vary_label = ''; vary_cell = cell(length(varargin)/3, 3);
+vary_label = ''; vary_cell = cell(floor(length(varargin)/3), 3);
 
 if ~isempty(varargin)
     
