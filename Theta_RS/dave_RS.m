@@ -41,58 +41,22 @@ I_const = 0; I_app = 0;
 
 
 spec.populations(1).name = 'RS';
-spec.populations(1).size = Nrs;
-spec.populations(1).equations = {['V''=(current)/Cm; V(0)=' num2str(IC_V) ]};
-spec.populations(1).mechanism_list = {'iPeriodicPulses','IBdbiPoissonExpJason','itonicPaired','IBnoise','IBiNaF','IBiKDR','IBiMMich','IBiCaH','IBleaknoisy'};
+spec.populations(1).size = 1;
+spec.populations(1).equations = {['dv/dt=(I(t)+@current)/Cm; v(0)=-65;',...
+    'I(t)=I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25); ton=500;',...
+    sprintf('toff=%f; I_app=%f; I_const=%f;', tspan, I_app, I_const),... 
+    'monitor functions']};
+spec.populations(1).mechanism_list = {'IBnoise','IBiNaF','IBiKDR','IBiMMich','IBleaknoisy','iNaP'};
 spec.populations(1).parameters = {...
-    'V_IC',-65,'IC_noise',IC_noise,'Cm',Cm,'E_l',-67,'E_l_std',10,'g_l',gl,...
-    'PPstim', RSPPstim, 'PPfreq', PPfreq,      'PPwidth', PPwidth,'PPshift',PPshift,...
-    'PPonset', PPonset, 'PPoffset', PPoffset, 'ap_pulse_num', ap_pulse_num,...
-    'ap_pulse_delay', ap_pulse_delay,'kernel_type', kernel_type, 'width2_rise', width2_rise,...
-    'gRAN',RSgRAN,'ERAN',ERAN,'tauRAN',tauRAN,'lambda',lambda,...
-    'stim',JRS1,'onset',0,'offset',RS_offset1,'stim2',JRS2,'onset2',RS_onset2,'offset2',Inf,...
-    'V_noise',RSda_Vnoise,...
-    'gNaF',100,'E_NaF',ENa,...
-    'gKDR',80,'E_KDR',E_EKDR,...
-    'gM',0.5,'E_M',E_EKDR,...
-    'gCaH',0,'E_CaH',ECa,...
+    'V_IC',-65,'IC_noise',0,'Cm',.9,'E_l',-67,'E_l_std',10,'g_l',.1,'V_noise',.3,...
+    'gNaF',100,'gKDR',80,'E_KDR',-95,'gM',0.67,'E_M',-95,'gNa',.2,...
     };
-
-model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',... % 'g_NaP=gKs/3.36;',...
-    'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',...
-    'fast_denom=1; gKDR=5/fast_denom; gNa=12.5/fast_denom;',...
-    'I(t)=I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25); ton=500;',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
-    sprintf('toff=%f; I_app=%f; I_const=%f;', tspan, I_app, I_const),... %  (ton<t&t<toff)
-    'monitor functions'];
-
-% Setting up structure containing info for two populations.
-s = [];
-% RS cells.
-s.populations(1).name = 'RS';
-s.populations(1).size = 1;
-s.populations(1).equations = model_eqns;
-s.populations(1).mechanism_list = {'iNaP','iKs','iKDRG','iNaG','gleak','CaDynT','iCaT','iKCaT'};
-%s.populations(1).parameters = {'Iapp',5,'gNa',120,'gK',36,'noise',40};
-% FS cells.
-s.populations(2).name = 'FS';
-s.populations(2).size = 1;
-s.populations(2).equations = model_eqns;
-s.populations(2).mechanism_list = {'iNa','iKDRG','gleak'};
-s.populations(2).parameters = {'Iapp',0,'gNa',12.5,'gK',5};
-% FS->RS GABA synapses.
-s.connections(1).direction = 'FS->RS';
-s.connections(1).mechanism_list = {'iGABAa'};
-s.connections(1).parameters = {'tauD',10,'gSYN',.1,'netcon','eye(N_pre,N_post)'};
-% RS->FS AMPA synapses.
-s.connections(2).direction = 'RS->FS';
-s.connections(2).mechanism_list = {'iAMPA'};
-s.connections(2).parameters = {'tauD',2,'gSYN',.1,'netcon','eye(N_pre,N_post)'};
 
 if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(spec, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
     
     % else
     % 
@@ -104,7 +68,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(s, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(spec, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25);
     
     % else
     % 
