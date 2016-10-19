@@ -5,7 +5,7 @@
 gKs=.084; E_Ks=-80;
 halfKs = -35; temp=34
 IC=0; IC_noise=0
-tau_div = 3^((34-22)/10)
+tau_div = 3^((temp-22)/10)
 tau_mult = 1
 
 % Functions
