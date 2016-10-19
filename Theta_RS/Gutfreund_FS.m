@@ -39,7 +39,7 @@ end
 
 I_const = 0; I_app = 0;
 
-model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
+model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',... % 'g_NaP=gKs/3.36;',...
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',...
     'fast_denom=1; gKDR=5/fast_denom; gNa=12.5/fast_denom;',...
     'I(t)=I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25); ton=500;',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
@@ -58,8 +58,8 @@ s.populations(1).mechanism_list = {'iNaP','iKs','iKDRG','iNaG','gleak','CaDynT',
 s.populations(2).name = 'FS';
 s.populations(2).size = 1;
 s.populations(2).equations = model_eqns;
-s.populations(2).mechanism_list = {'iNaG','iKDRG','gleak'};
-s.populations(2).parameters = {'Iapp',0}; % ,'gNa',12.5,'gK',5};
+s.populations(2).mechanism_list = {'iNa','iKDRG','gleak'};
+s.populations(2).parameters = {'Iapp',0,'gNa',12.5,'gK',5};
 % FS->RS GABA synapses.
 s.connections(1).direction = 'FS->RS';
 s.connections(1).mechanism_list = {'iGABAa'};
