@@ -42,9 +42,10 @@ I_app = 0;
 C_mult = .9/.25;
 
 model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.9; v(0)=-65;',...
+    'gNaP=gKs/3.36;',...
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
     sprintf('I_const=%g;', I_const),...    %  halfKs=-60; halfNaP=-60; 
-    sprintf('gNaP=%g*0.0125; gKs=%g*0.084; gNaP=%g*0.025; gl=%g*0.025; gCa=%g*0.02; gK=%g*0.001;', C_mult*ones(1, 6)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
+    sprintf('gl=%g*0.025; gCa=%g*0.02; gK=%g*0.001;', C_mult*ones(1, 3)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
     sprintf('fast_denom=1; gKDR=%g*5/fast_denom; gNa=%g*12.5/fast_denom;', C_mult*ones(1, 2)),...
     'I(t)=I_app*((t/500)*(t<=ton)+(ton<t&t<toff))*(1+rand*.25);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
     sprintf('ton=500; toff=%g; I_app=%g;', tspan, I_app),... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms
@@ -54,7 +55,7 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 1);
     
     % else
     % 
@@ -66,7 +67,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 1);
     
     % else
     % 

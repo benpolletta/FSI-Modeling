@@ -5,6 +5,7 @@ ENa=50
 tauNaP=5
 halfNaP=-40
 IC_noise=0; m_IC=0
+gNaP = .025
 
 % functions
 minf(X)=1./(1+exp(-(X-halfNaP)/5))
