@@ -3,7 +3,7 @@
 gNa = 12.5 %/3
 gdenomN = 1
 ENa = 40
-tau_h = (3^((temp-6.3)/10)); temp=34 % 1
+tau_h = (3^((temp-6.3)/10)); temp = 22; % 34 % 1
 IC=0; IC_noise=0
 Noffset = 0
 
