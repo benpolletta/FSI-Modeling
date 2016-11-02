@@ -1,0 +1,22 @@
+%% iStep produces a stepped input, with ramping between steps.
+% Parameters.
+noise = .25;
+I_app = .65;
+ton = 500;
+noSteps = 10;
+% stepLength = T(end)/noSteps;
+
+% Functions.
+
+% LastStep(t)=floor(t./stepLength);
+% StepT(t)=mod(t,stepLength);
+% Step(t)=(StepT(t)/ton).*(StepT(t)<=ton)+(ton<StepT(t));
+
+Tend = T(end);
+
+Ladder=getStep(Tend,dt,noSteps,ton);
+Step(X)=Ladder(k,:)
+I(X)=I_app*Step(X).*(1+rand(1,Npop)*noise)/noSteps;
+
+% Linkers.
+@current += I(X)
