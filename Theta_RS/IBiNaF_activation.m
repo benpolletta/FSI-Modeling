@@ -7,7 +7,7 @@ NaF_V2 = [33.5];
 NaF_d2 = [15];
 NaF_c0 = [0.15];
 NaF_c1 = [1.15];
-NaF_offset = 15;
+NaF_offset = 10;
 
 hinf = 1./(1+exp((v+NaF_V1-NaF_offset)/NaF_d1));
 
