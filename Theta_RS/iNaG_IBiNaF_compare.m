@@ -4,7 +4,7 @@ v = -100:50;
 
 [iNaG_m, iNaG_h, iNaG_ht] = iNaG_activation(v);
 
-[iNaF_m, iNaF_h, iNaF_ht] = IBiNaF_activation(v);
+[iNaF_m, iNaF_h, iNaF_ht] = IBiNaF_activation(v, 0);
 
 figure
 

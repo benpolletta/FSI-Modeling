@@ -1,4 +1,4 @@
-function [minf, hinf, htau] = IBiNaF_activation(v)
+function [minf, hinf, htau] = IBiNaF_activation(v, NaF_offset)
 
 NaF_V0 = [34.5];
 NaF_V1 = [59.4];
@@ -7,7 +7,6 @@ NaF_V2 = [33.5];
 NaF_d2 = [15];
 NaF_c0 = [0.15];
 NaF_c1 = [1.15];
-NaF_offset = 0;
 
 hinf = 1./(1+exp((v+NaF_V1-NaF_offset)/NaF_d1));
 

@@ -4,7 +4,7 @@ v = -100:50;
 
 [iKDRG_minf, iKDRG_mtau] = iKDRG_activation(v);
 
-[IBiKDR_minf, IBiKDR_mtau] = IBiKDR_activation(v);
+[IBiKDR_minf, IBiKDR_mtau] = IBiKDR_activation(v, 0);
 
 figure
 
