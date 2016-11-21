@@ -159,6 +159,7 @@ ENa=50;      % sodium reversal potential
 E_EKDR=-95;  % potassium reversal potential for excitatory cells
 ECa=125;     % calcium reversal potential
 IC_noise=.25;% fractional noise in initial conditions
+E_l_std = 10;
 
 if ~noise
     
@@ -202,10 +203,10 @@ if include_RS
     i=i+1;
     spec.populations(i).name = 'RS';
     spec.populations(i).size = Nrs;
-    spec.populations(i).equations = {['V''=(current)/Cm; V(0)=' num2str(IC_V) ]};
+    spec.populations(i).equations = {['V''=(current)/Cm; V(0)=' num2str(IC_V), '; monitor functions']};
     spec.populations(i).mechanism_list = {'iPeriodicPulses','IBdbiPoissonExpJason','itonicPaired','IBnoise','IBiNaF','IBiKDR','IBiMMich','IBiCaH','IBleaknoisy'};
     spec.populations(i).parameters = {...
-      'V_IC',-65,'IC_noise',IC_noise,'Cm',Cm,'E_l',-67,'E_l_std',10,'g_l',gl,...
+      'V_IC',-65,'IC_noise',IC_noise,'Cm',Cm,'E_l',-67,'E_l_std',E_l_std,'g_l',gl,...
       'PPstim', RSPPstim, 'PPfreq', PPfreq,'PPwidth',PPwidth,'PPshift',PPshift,...
       'PPonset', PPonset, 'PPoffset', PPoffset,'ap_pulse_num', ap_pulse_num,...
       'ap_pulse_delay', ap_pulse_delay,'kernel_type', kernel_type, 'width2_rise', width2_rise,...
@@ -224,7 +225,7 @@ if include_FS
     i=i+1;
     spec.populations(i).name = 'FS';
     spec.populations(i).size = Nfs;
-    spec.populations(i).equations = {['V''=(current)/Cm; V(0)=' num2str(IC_V) ]};
+    spec.populations(i).equations = {['V''=(current)/Cm; V(0)=' num2str(IC_V) ,'; monitor functions']};
     spec.populations(i).mechanism_list = {'iPeriodicPulses','IBitonic','IBnoise','FSiNaF','FSiKDR','IBleaknoisy'};
     spec.populations(i).parameters = {...
       'V_IC',-65,'IC_noise',IC_noise,'Cm',Cm,'E_l',-67,'E_l_std',20,'g_l',0.1,...
