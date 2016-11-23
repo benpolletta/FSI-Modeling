@@ -7,19 +7,19 @@ vary_label = ''; vary_cell = cell(floor(length(varargin)/3), 3);
 
 if ~isempty(varargin)
     
-    for a = 1:(length(varargin)/2)
+    for a = 1:(length(varargin)/3)
         
-        if isscalar(varargin{2*a})
+        if isscalar(varargin{3*a})
             
-            vary_label = [vary_label, sprintf('_%s_%g', varargin{2*a - 1}, varargin{2*a})];
+            vary_label = [vary_label, sprintf('_%s_%s_%g', varargin{3*a - 2}, varargin{3*a - 1}, varargin{3*a})];
             
         else
         
-            vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
+            vary_label = [vary_label, sprintf('_%s_%s_%gto%g', varargin{3*a - 2}, varargin{3*a - 1}, varargin{3*a}(1), varargin{3*a}(end))];
         
         end
         
-        vary_cell(a, :) = {'RS', varargin{2*a - 1}, varargin{2*a}};
+        vary_cell(a, :) = {varargin{3*a - 2}, varargin{3*a - 1}, varargin{3*a}};
         
     end
     
