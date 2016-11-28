@@ -3,7 +3,7 @@
 noise = .25;
 I_app = .65;
 ton = 500;
-noSteps = 10;
+noSteps = 1;
 % stepLength = T(end)/noSteps;
 
 % Functions.

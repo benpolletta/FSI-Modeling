@@ -66,7 +66,9 @@ spec.populations(2).name = 'FS';
 spec.populations(2).size = Nfs;
 spec.populations(2).equations = {['V''=(current)/Cm; Cm = .9; V(0)=-65; monitor functions']};
 spec.populations(2).mechanism_list = {'FSiNaF','FSiKDR','gleak'};
-spec.populations(2).parameters = {'gNaF', 100, 'gKDR', 80, 'gl', .1};% % % % % % % % % % % %  Connections  % % % % % % % % % % % % %  
+spec.populations(2).parameters = {'gNaF', 100, 'gKDR', 80, 'gl', .1};
+
+% % % % % % % % % % % %  Connections  % % % % % % % % % % % % %  
 
 i=0;
 
