@@ -90,7 +90,7 @@ gNMDA_RSRS=5/Nrs;
 gAMPA_rsfs=0.4/Nrs;
 gNMDA_rsfs=0/Nrs;
 gGABAaff=.5/Nfs;
-gGABAa_fsrs=1.0/Nfs;
+gGABAa_fsrs=10^(-1)/Nfs;
 
 % Synaptic time constants & reversals
 tauAMPAr=.25;  % ms, AMPA rise time; Jung et al
