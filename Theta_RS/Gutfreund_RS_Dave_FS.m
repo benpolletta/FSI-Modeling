@@ -3,6 +3,8 @@ function [data, name] = Gutfreund_RS_Dave_FS(I_const, tspan, save_flag, Nrs, Nfs
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
 
+tic;
+
 if isempty(Nfs), Nfs = 25; end
 
 if isempty(Nrs), Nrs = 25; end
@@ -148,6 +150,8 @@ if Nfs > 0 && Nrs > 0
         'tauDx',tauGABAad,'tauRx',tauGABAar,'fanout',inf,'IC_noise',0,'g_SYN_hetero',gsyn_hetero,...
         };
 end
+
+toc;
 
 if ~isempty(varargin)
     
