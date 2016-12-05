@@ -129,7 +129,7 @@ end
 
 % % % % %  FS Cells  % % % % %
 % % FS->FS Synaptic connections
-if Nfs > 1
+if Nfs > 0
     i=i+1;
     spec.connections(i).direction = 'FS->FS';                   % GABA_A
     spec.connections(i).mechanism_list = {'IBaIBdbiSYNseed','IBaIBaiGAP'};
