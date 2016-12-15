@@ -1,4 +1,3 @@
-
 function s3 = getPeriodicPulseFast(freq,width,shift,T,dt,onset,offset,Npop,kernel_type,width2_rise,plot_demo_on)
 
 % Comment this out because it gets confusing.
@@ -127,7 +126,7 @@ if plot_demo_on                 % Plot if desired
 end
 
 
-s3 = s3 - mean(s3);
+% s3 = s3 - mean(s3);
 
 s3 = repmat(s3(:),[1,Npop]);
     
