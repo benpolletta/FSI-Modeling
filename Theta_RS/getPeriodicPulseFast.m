@@ -23,7 +23,8 @@ function s3 = getPeriodicPulseFast(freq,width,shift,T,dt,onset,offset,Npop,kerne
 % Build train of delta functions, spaced with frequency "freq"
 t=(0:dt:T)';                            % Generate times vector
 s = zeros(size(t));
-pulse_period=1000/freq;
+pulse_period=1000/freq; 
+shift = shift + width/2;                % So that each pulse begins at the time of the corresponding cycle.
 s((1+round(shift/dt)):round(pulse_period/dt):end) = 1;    % Add deltas, allowing for shift.
 
 % Remove anything outside of onset to offset
