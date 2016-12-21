@@ -132,7 +132,7 @@ for var = 1:length(variables)
         
         mtit(handle(p), vary_title, 'FontSize', 14, 'yoff', .2)
         
-        save_as_pdf(handle(p), ['Figures/gutfreund_metrics', vary_name, '_', variables{var}])
+        save_as_pdf(handle(p), ['Figures/phase_metrics', vary_name, '_', variables{var}])
         
     end
     

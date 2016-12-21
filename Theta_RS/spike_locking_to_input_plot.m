@@ -1,5 +1,7 @@
 function results = spike_locking_to_input_plot(data, results, name)
 
+close('all')
+
 if isempty(results)
     
     results = AnalyzeStudy(data, @phase_metrics);
@@ -114,6 +116,8 @@ end
 
 figure_labels = cell(no_figures, 1);
 
+nonempty_plots = zeros(no_rows, no_cols, no_figures);
+
 for f = 1:no_figures
     
     figure(f)
@@ -154,7 +158,7 @@ for f = 1:no_figures
                     
                 else
                     
-                    study_index = zeros(size(figure_index));
+                    study_index = []; % zeros(size(figure_index));
                     
                     study_label = '';
                     
@@ -171,47 +175,51 @@ for f = 1:no_figures
                 
             end
             
-            peak_freqs(r, c, f) = results(study_index).peak_freq;
-            
-            % no_spikes = size(results(study_index).v_spike_phases, 1);
-            
-            % v_spike_phases(vsp_index + (1:no_spikes), :, :) = results(s).v_spike_phases;
-            
-            mean_spike_mrvs = nanmean(exp(sqrt(-1)*results(study_index).v_spike_phases));
-            
-            no_spikes(r, c, f) = size(results(study_index).v_spike_phases, 1);
-            
-            v_mean_spike_mrvs(r, c, f) = mean_spike_mrvs(1); % circ_r(results(s).v_spike_phases); %
-            
-            % f_index = mod(s - 1, no_input_freqs) + 1;
-            %
-            % o_index = ceil(s/no_input_freqs);
-            
-            % subplot_index = (r - 1)*no_cols + c; % no_other_conditions*(f_index - 1) + o_index;
-            
-            ax(r, c, f) = subplot(no_rows, no_cols, s); % no_input_freqs, no_other_conditions, (f_index - 1)*no_other_conditions + o_index)
-            
-            rose(gca, results(study_index).v_spike_phases(:, 1, 1)) % , 60)
-            
-            hold on
-            
-            title(study_label, 'interpreter', 'none')
-            
-            % if ~strcmp(vary_labels{1}, vary_labels{2})
-            % 
-            %     ylabel([num2str(data(study_index).(vary_labels{2}), '%.3g'), ' ', vary_labels{2}])
-            % 
-            % end
-            
-            % v_mean_spike_phases(s, :, :) = circ_mean(results(s).v_spike_phases);
-            
-            % vsp_index = vsp_index + no_spikes;
+            if ~isempty(study_index) % study_index = logical(study_index);
+                
+                nonempty_plots(r, c, f) = 1;
+                
+                peak_freqs(r, c, f) = results(study_index).peak_freq;
+                
+                % no_spikes = size(results(study_index).v_spike_phases, 1);
+                
+                % v_spike_phases(vsp_index + (1:no_spikes), :, :) = results(s).v_spike_phases;
+                
+                mean_spike_mrvs = nanmean(exp(sqrt(-1)*results(study_index).v_spike_phases));
+                
+                no_spikes(r, c, f) = size(results(study_index).v_spike_phases, 1);
+                
+                v_mean_spike_mrvs(r, c, f) = mean_spike_mrvs(1); % circ_r(results(s).v_spike_phases); %
+                
+                % f_index = mod(s - 1, no_input_freqs) + 1;
+                %
+                % o_index = ceil(s/no_input_freqs);
+                
+                % subplot_index = (r - 1)*no_cols + c; % no_other_conditions*(f_index - 1) + o_index;
+                
+                ax(r, c, f) = subplot(no_rows, no_cols, s); % no_input_freqs, no_other_conditions, (f_index - 1)*no_other_conditions + o_index)
+                
+                rose(gca, results(study_index).v_spike_phases(:, 1, 1)) % , 60)
+                
+                hold on
+                
+                title(study_label, 'interpreter', 'none')
+                
+                % if ~strcmp(vary_labels{1}, vary_labels{2})
+                %
+                %     ylabel([num2str(data(study_index).(vary_labels{2}), '%.3g'), ' ', vary_labels{2}])
+                %
+                % end
+                
+                % v_mean_spike_phases(s, :, :) = circ_mean(results(s).v_spike_phases);
+                
+                % vsp_index = vsp_index + no_spikes;
+                
+            end
             
         end
     
     end
-    
-    mtit(gcf, figure_labels{f}, 'FontSize', 16)
     
 end
 
@@ -227,15 +235,21 @@ for f = 1:no_figures
             
             s = (r - 1)*no_cols + c;
             
-            subplot(no_rows, no_cols, s)
-            
-            multiplier = max(max(xlim), max(ylim));
-            
-            compass(multiplier*real(v_mean_spike_mrvs(r, c, f)), multiplier*imag(v_mean_spike_mrvs(r, c, f)), 'k')
+            if nonempty_plots(r, c, f)
+                
+                subplot(no_rows, no_cols, s)
+                
+                multiplier = max(max(xlim), max(ylim));
+                
+                compass(multiplier*real(v_mean_spike_mrvs(r, c, f)), multiplier*imag(v_mean_spike_mrvs(r, c, f)), 'k')
+                
+            end
             
         end
         
     end
+    
+    mtit(gcf, figure_labels{f}, 'FontSize', 16)
 
     if no_figures > 1
     
@@ -259,7 +273,11 @@ if strcmp(vary_labels{1}, vary_labels{2})
     
     mrv_for_plot = reshape(permute(v_mean_spike_mrvs, [2 1 3:length(size(v_mean_spike_mrvs))]), no_rows*no_cols, no_figures);
     
+    mrv_for_plot = mrv_for_plot(1:vary_lengths(1), :);
+    
     nspikes_for_plot = reshape(permute(no_spikes, [2 1 3:length(size(no_spikes))]), no_rows*no_cols, no_figures);
+    
+    nspikes_for_plot = nspikes_for_plot(1:vary_lengths(1), :);
     
 else
     
