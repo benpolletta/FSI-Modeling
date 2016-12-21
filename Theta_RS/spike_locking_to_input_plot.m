@@ -299,6 +299,8 @@ for f = 1:no_figures
     
     axis tight
     
+    box off
+    
     ylim([0 1])
     
     title(['Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
@@ -317,6 +319,8 @@ for f = 1:no_figures
     
     axis tight
     
+    box off
+    
     ylim([0 1])
     
     title(['Adjusted Spike PLV to Input by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
@@ -330,6 +334,8 @@ for f = 1:no_figures
     plot(vary_vectors{1}, nspikes_for_plot(:, :, f)')
     
     axis tight
+    
+    box off
     
     title(['Number of Spikes by ', vary_labels{1}], 'FontSize', 16, 'interpreter', 'none')
     
