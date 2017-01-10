@@ -41,7 +41,7 @@ else
     
 end
 
-I_app = 0;
+% I_app = 0;
 
 C_mult = 2.7/.25;
 
@@ -59,8 +59,8 @@ spec.populations(1).mechanism_list = {'iNaP','iKs','iNaG','iKDRG','gleak','CaDyn
 spec.populations(1).parameters = {...
     'gNa', C_mult*12.5, 'gKDR', C_mult*5, 'gl', C_mult*.025, 'CAF', 24/C_mult,...
     'tau_h', 5, 'tau_m', 5,...
-    'gKs', 1.4472, 'gNaP', 1.4472/3.36, 'gCa', .864, 'gKCa', .216, 'bKCa', .002,... % 'tau_div', 2,... % C_mult*ones(1, 3)),... %%% 
-    'ton', ton, 'toff', tspan, 'I_app', I_app,... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms % 'noise=.25; I(t)=C_mult*I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*noise);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
+    'gKs', 1.4472, 'gCa', .864, 'gKCa', .216, 'bKCa', .002,... % 'tau_div', 2,... % C_mult*ones(1, 3)),... %%% 
+    'ton', ton, 'toff', tspan,... % 'I_app', I_app,... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms % 'noise=.25; I(t)=C_mult*I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*noise);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
     };
 
 % % % % %  FS Cells  % % % % %
