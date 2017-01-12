@@ -1,8 +1,5 @@
 function [data, name] = Theta_RS_FS(I_const, tspan, save_flag, Nrs, Nfs, varargin)
 
-% Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
-% subthreshold oscillations to intermittent spiking to continuous spiking.
-
 if isempty(Nfs), Nfs = 25; end
 
 if isempty(Nrs), Nrs = 25; end
