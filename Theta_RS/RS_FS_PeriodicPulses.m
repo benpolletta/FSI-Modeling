@@ -1,4 +1,4 @@
-function [data, name] = Theta_RS_FS(I_const, tspan, save_flag, Nrs, Nfs, varargin)
+function [data, name] = RS_FS_PeriodicPulses(I_const, tspan, save_flag, Nrs, Nfs, varargin)
 
 if isempty(Nfs), Nfs = 25; end
 
@@ -26,7 +26,7 @@ if ~isempty(varargin)
     
 end
 
-name = ['theta_RS_FS', vary_label];
+name = ['RS_FS_periodicpulses', vary_label];
 
 if size(vary_cell, 1) > 2
 
