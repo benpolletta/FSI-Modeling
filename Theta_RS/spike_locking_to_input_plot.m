@@ -1,10 +1,38 @@
-function results = spike_locking_to_input_plot(data, results, name)
+function results = spike_locking_to_input_plot(data, results, name, varargin)
+
+v_pop = 'pop1'; i_pop = 'pop1'; label = '';
+
+if ~isempty(varargin)
+    
+    for v = 1:(length(varargin)/2)
+        
+        if strcmp(varargin{2*v - 1}, 'i_pop')
+            
+            i_pop = varargin{2*v};
+            
+            label = [label, '_', i_pop, 'i'];
+        
+        elseif strcmp(varargin{2*v - 1}, 'v_pop')
+            
+            v_pop = varargin{2*v};
+            
+            label = [label, '_', v_pop, 'v'];
+            
+        end
+        
+    end
+    
+end
+            
+% input = [i_pop, '_iPeriodicPulses_input'];
+% 
+% voltage = [v_pop, '_v'];
 
 close('all')
 
 if isempty(results)
     
-    results = AnalyzeStudy(data, @phase_metrics);
+    results = AnalyzeStudy(data, @phase_metrics, 'v_pop', v_pop, 'i_pop', i_pop);
     
 end
 
@@ -253,11 +281,11 @@ for f = 1:no_figures
 
     if no_figures > 1
     
-        save_as_pdf(gcf, [name, '_rose_', num2str(f)])
+        save_as_pdf(gcf, [name, label, '_rose_', num2str(f)])
     
     else
         
-        save_as_pdf(gcf, [name, '_rose'])
+        save_as_pdf(gcf, [name, label, i_label, '_rose'])
         
     end
     
@@ -345,11 +373,11 @@ for f = 1:no_figures
     
     if no_figures > 1
         
-        save_as_pdf(gcf, [name, '_MRV_', num2str(f)])
+        save_as_pdf(gcf, [name, label, '_MRV_', num2str(f)])
         
     else
         
-        save_as_pdf(gcf, [name, '_MRV'])
+        save_as_pdf(gcf, [name, label, '_MRV'])
         
     end
     

@@ -1,12 +1,24 @@
 function results = phase_metrics(data, varargin)
 
+v_pop = 'pop1';
+
+i_pop = 'pop1';
+
+figure_flag = 0;
+
+no_periods = 1;
+
 if ~isempty(varargin)
     
     for v = 1:(length(varargin)/2)
         
-        if strcmp(varargin{2*v - 1}, 'variable')
+        if strcmp(varargin{2*v - 1}, 'i_pop')
             
-            variable = varargin{2*v};
+            i_pop = varargin{2*v};
+        
+        elseif strcmp(varargin{2*v - 1}, 'v_pop')
+            
+            v_pop = varargin{2*v};
             
         elseif strcmp(varargin{2*v - 1}, 'figure_flag')
             
@@ -22,21 +34,21 @@ if ~isempty(varargin)
     
 end
 
-if ~exist('variable', 'var'), variable = 'pop1_v'; end
+voltage = [v_pop, '_v'];
 
-if ~exist('figure_flag', 'var'), figure_flag = 0; end
+input = [i_pop, '_iPeriodicPulses_input'];
 
-if ~exist('no_periods', 'var'), no_periods = 1; end
+freq = [i_pop, '_PPfreq'];
 
-v = getfield(data, variable);
+v = getfield(data, voltage);
 
 t = data.time;
 
-input = data.pop1_iPeriodicPulses_input;
+i = getfield(data, input);
 
 sampling_freq = round(1000*length(t)/t(end));
 
-v = v(t >= 1000); input = input(t >= 1000); t = t(t >= 1000);
+v = v(t >= 1000); i = i(t >= 1000); t = t(t >= 1000);
 
 %% Getting peak frequency.
 
@@ -50,11 +62,11 @@ v_hat_smoothed = conv(v_hat, gauss_kernel, 'same');
 
 peak_freq = f(v_hat_smoothed == max(v_hat_smoothed));
 
-freqs = [data.pop1_PPfreq 4.5 peak_freq]'; no_cycles = [7 7 7]'; no_freqs = length(freqs);
+freqs = [getfield(data, freq) 4.5 peak_freq]'; no_cycles = [7 7 7]'; no_freqs = length(freqs);
 
 %% Getting wavelet components.
 
-v_bandpassed(:, 1) = wavelet_spectrogram(-input, sampling_freq, freqs(1), no_cycles(1), 0, '');
+v_bandpassed(:, 1) = wavelet_spectrogram(-i, sampling_freq, freqs(1), no_cycles(1), 0, '');
 
 v_bandpassed(:, 2:3) = wavelet_spectrogram(v, sampling_freq, freqs(2:3), no_cycles(2:3), 0, '');
 
