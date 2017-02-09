@@ -1,7 +1,26 @@
-function [data, name] = Gutfreund_Cap(I_const, tspan, save_flag, varargin)
+function [data, name] = Gutfreund_Cap(I_const, tspan, save_flag, gKs_in, gCa_in, gKCa_in, varargin)
 
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
+
+if isempty(gKs_in)
+    gKs_in = 0.134; gKs_flag = ''; 
+else
+    gKs_flag = sprintf('_gKs_in_%g', gKs_in);
+end
+
+if isempty(gCa_in) 
+    gCa_in = 0.05; gCa_flag = '';
+else
+    gCa_flag = sprintf('_gCa_in_%g', gCa_in);
+
+end
+
+if isempty(gKCa_in)
+    gKCa_in = 0.014; gKCa_flag = '';
+else
+    gKCa_flag = sprintf('_gKCa_in_%g', gKCa_in);
+end
 
 vary_label = ''; vary_cell = cell(length(varargin)/2, 3);
 
@@ -25,7 +44,7 @@ if ~isempty(varargin)
     
 end
 
-name = ['gutfreund_Cap', vary_label];
+name = ['gutfreund_Cap', gKs_flag, gCa_flag, gKCa_flag, vary_label];
 
 if size(vary_cell, 1) > 2
 
@@ -47,7 +66,8 @@ model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.9; v(0)=-65;',... % +I(t)
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
     'C_mult=Cm/.25; gKs=C_mult*.134; gNaP_denom=3.36; gNaP=gKs/gNaP_denom;',...
     sprintf('I_const=%g;', I_const),...    %  halfKs=-60; halfNaP=-60; 
-    'gl=C_mult*0.025; gCa=C_mult*0.05; gKCa=C_mult*0.014; CAF=24/C_mult; bKCa = .002;',... % C_mult*ones(1, 3)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
+    sprintf( 'gKs=C_mult*%g; gCa=C_mult*%g; gKCa=C_mult*%g;', gKs_in, gCa_in, gKCa_in),...
+    'gl=C_mult*0.025; CAF=24/C_mult; bKCa = .002;',... % C_mult*ones(1, 3)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
     'fast_denom=1; gKDR=C_mult*5/fast_denom; gNa=C_mult*12.5/fast_denom;',... % C_mult*ones(1, 2)),...
     'tau_fast = 5; tau_m = tau_fast; tau_h = tau_fast; I_app = 0;',...
     sprintf('ton=%g; toff=%g;', ton, tspan),... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms % 

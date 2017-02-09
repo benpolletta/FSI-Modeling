@@ -102,6 +102,6 @@ end
 
 if save_flag
     
-    save([name, '.mat'], 'data', '-v7.3')
+    save([name, '.mat'], 'data', 'name', '-v7.3')
     
 end
