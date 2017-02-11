@@ -268,7 +268,7 @@ IB_Eh=-25;   % h-current reversal potential for deep layer IB cells
 ECa=125;     % calcium reversal potential
 IC_noise=.25;% fractional noise in initial conditions
 if no_noise
-    IC_noise= 0;
+    IC_noise = 0;
     IBda_Vnoise = 0;
     IBs_Vnoise = 0;
     IBdb_Vnoise = 0;
