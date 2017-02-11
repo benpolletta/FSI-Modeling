@@ -78,18 +78,18 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-    if prod(cell2mat(cellfun(@(x) length(x), vary_cell(:, 3), 'UniformOutput', 0))) > 12
-    
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'cluster_flag', 1, 'overwrite_flag', 1,...
-            'save_data_flag', 1, 'verbose_flag', 1, 'study_dir', name, 'downsample_factor', 25);
-        
-        return
-        
-    else
+    % if prod(cell2mat(cellfun(@(x) length(x), vary_cell(:, 3), 'UniformOutput', 0))) > 12
+    % 
+    %     data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'cluster_flag', 1, 'overwrite_flag', 1,...
+    %         'save_data_flag', 1, 'verbose_flag', 1, 'study_dir', name, 'downsample_factor', 25);
+    % 
+    %     return
+    % 
+    % else
         
         data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
         
-    end
+    % end
     
     % else
     % 
