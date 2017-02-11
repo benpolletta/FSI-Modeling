@@ -64,9 +64,9 @@ ton = 500;
 
 model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.9; v(0)=-65;',... % +I(t)
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
-    'C_mult=Cm/.25; gKs=C_mult*.134; gNaP_denom=3.36; gNaP=gKs/gNaP_denom;',...
     sprintf('I_const=%g;', I_const),...    %  halfKs=-60; halfNaP=-60; 
-    sprintf( 'gKs=C_mult*%g; gCa=C_mult*%g; gKCa=C_mult*%g;', gKs_in, gCa_in, gKCa_in),...
+    sprintf( 'C_mult=Cm/.25; gKs=C_mult*%g; gCa=C_mult*%g; gKCa=C_mult*%g;', gKs_in, gCa_in, gKCa_in),...
+    'gNaP_denom=3.36; gNaP=gKs/gNaP_denom;',...
     'gl=C_mult*0.025; CAF=24/C_mult; bKCa = .002;',... % C_mult*ones(1, 3)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
     'fast_denom=1; gKDR=C_mult*5/fast_denom; gNa=C_mult*12.5/fast_denom;',... % C_mult*ones(1, 2)),...
     'tau_fast = 5; tau_m = tau_fast; tau_h = tau_fast; I_app = 0;',...
@@ -78,7 +78,18 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
+    if prod(cell2mat(cellfun(@(x) length(x), vary_cell(:, 3), 'UniformOutput', 0))) > 12
+    
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'cluster_flag', 1, 'overwrite_flag', 1,...
+            'save_data_flag', 1, 'verbose_flag', 1, 'study_dir', name, 'downsample_factor', 25);
+        
+        return
+        
+    else
+        
         data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
+        
+    end
     
     % else
     % 
