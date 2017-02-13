@@ -9,13 +9,39 @@ if ~isempty(varargin)
     
     for a = 1:(length(varargin)/2)
         
+        if regexp(varargin{2*a - 1}, '^\(.*\)$', 'once')
+            
+            param_names = regexp(varargin{2*a - 1},'[\w\.-]+','match');
+            
+            if size(varargin{2*a}, 1) == 1
+                
+                varargin{2*a} = repmat(varargin{2*a}, length(param_names), 1);
+                
+            end
+            
+            for p = 1:length(param_names)
+                
+                vary_label = [vary_label, sprintf('_%s', param_names{p})];
+                
+            end
+            
+            for p = 1:length(param_names)
+        
+                vary_label = [vary_label, sprintf('_%gto%g', varargin{2*a}(p, 1), varargin{2*a}(p, end))];
+                
+            end
+            
+        end
+        
         if isscalar(varargin{2*a})
             
             vary_label = [vary_label, sprintf('_%s_%g', varargin{2*a - 1}, varargin{2*a})];
             
-        else
+        elseif size(varargin{2*a}, 1) == 1
         
             vary_label = [vary_label, sprintf('_%s_%gto%g', varargin{2*a - 1}, varargin{2*a}(1), varargin{2*a}(end))];
+            
+        elseif size(varargin{2*a}, 1) > 1
         
         end
         
@@ -52,7 +78,18 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
+    if prod(cell2mat(cellfun(@(x) length(x), vary_cell(:, 3), 'UniformOutput', 0))) > 12
+    
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'cluster_flag', 1, 'overwrite_flag', 1,...
+            'save_data_flag', 1, 'verbose_flag', 1, 'study_dir', name, 'downsample_factor', 25);
+    
+        return
+    
+    else
+    
         data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        
+    end
     
     % else
     % 
