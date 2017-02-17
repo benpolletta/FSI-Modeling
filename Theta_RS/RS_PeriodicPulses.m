@@ -87,7 +87,8 @@ if ~isempty(varargin)
     
     else
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1,...
+            'downsample_factor', 25, 'verbose_flag', 0);
         
     end
     
