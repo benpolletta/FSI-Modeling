@@ -40,9 +40,9 @@ input = [i_pop, '_iPeriodicPulses_input'];
 
 freq = [i_pop, '_PPfreq'];
 
-v = getfield(data, voltage);
-
 t = data.time;
+
+v = getfield(data, voltage);
 
 i = getfield(data, input);
 
