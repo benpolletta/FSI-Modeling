@@ -1,7 +1,8 @@
 function [data, name] = Gutfreund_original(I_const, I_app, varargin)
 
-% Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
+% Set tau_fast = 7, look at I_app = .5, ..., .8 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
+% Sample call: [data, name] = Gutfreund_origial(0, 0, 'I_app', .5:.015:.8);
 
 vary_label = ''; vary_cell = cell(length(varargin)/2, 3);
 
@@ -51,45 +52,45 @@ model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
 
 if ~isempty(varargin)
     
-    if strcmp(version('-release'), '2012a')
+    % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1);
     
-    else
-        
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'compile_flag', 1);
-    
-    end
+    % else
+    % 
+    %     data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'compile_flag', 1);
+    % 
+    % end
     
 else
     
-    if strcmp(version('-release'), '2012a')
+    % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan]);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan]);
     
-    else
-    
-        data=SimulateModel(model_eqns, 'tspan', [0 tspan], 'compile_flag', 1);
-        
-    end
+    % else
+    % 
+    %     data=dsSimulate(model_eqns, 'tspan', [0 tspan], 'compile_flag', 1);
+    % 
+    % end
      
 end
     
 try 
     
-    PlotData(data)
+    dsPlot(data)
 
     if no_figures > 1
         
         for f = 1:no_figures
             
-            save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)])
+            save_as_pdf(f, [name, sprintf('_%g', f)]) % 'Figures/', 
             
         end
         
     else
     
-        save_as_pdf(gcf, ['Figures/', name])
+        save_as_pdf(gcf, [name]) % 'Figures/', 
 
     end
     
