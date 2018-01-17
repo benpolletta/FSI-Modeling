@@ -40,7 +40,7 @@ end
 I_app = 0;
 
 model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
-    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT,iPeriodicPulses,iPeriodicSpikes};',...
+    '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',... ,iPeriodicPulses,iPeriodicSpikes};',...
     sprintf('gKs=0.084; gNaP_denom=3.36; gNaP=gKs/gNaP_denom; I_const=%g;', I_const),...    %  halfKs=-60; halfNaP=-60; gKs=0.084; gNaP=0.025; gl=0.025; gCa=0.02; %%% 
     'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... 
     'slow_offset=0; slow_offset_correction=0; Ks_offset=slow_offset-slow_offset_correction; NaP_offset=slow_offset;',...
@@ -53,7 +53,7 @@ if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
     
     % else
     % 
@@ -65,7 +65,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
     
     % else
     % 
@@ -77,7 +77,7 @@ end
     
 try 
     
-    PlotData(data)
+    dsPlot(data)
 
     if no_figures > 1
         
