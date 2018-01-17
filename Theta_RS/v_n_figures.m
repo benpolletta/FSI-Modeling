@@ -1,12 +1,12 @@
-% function v_n_figures(no_rows, no_cols)
+function v_n_figures(data, no_rows, no_cols)
 
-no_rows = 11;
-
-no_cols = 3;
+% no_rows = 11;
+% 
+% no_cols = 3;
 
 figure,
 
-for s = 1:no_rows*no_cols, 
+for s = 1:no_rows*no_cols
 
     subplot(no_rows, no_cols, s) 
     
@@ -23,13 +23,13 @@ for s = 1:no_rows*no_cols,
     
     end
     
-    if ceil(s/no_cols) == no_rows,
+    if ceil(s/no_cols) == no_rows
     
         xlabel('Voltage','FontSize',14), 
     
     end, 
     
-    if ceil(s/no_cols) == 1, 
+    if ceil(s/no_cols) == 1
     
         title(['\tau_{K_s} = ', num2str(data(s).pop1_tauKs, '%.3g')],'FontSize',16)
     
