@@ -87,7 +87,7 @@ if ~isempty(varargin)
     % 
     % else
         
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'compile_flag', 1, 'downsample_factor', 25);
         
     % end
     
@@ -101,7 +101,7 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25);
+        data = SimulateModel(model_eqns, 'tspan', [0 tspan], 'downsample_factor', 25);
     
     % else
     % 
