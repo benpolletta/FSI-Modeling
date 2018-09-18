@@ -48,13 +48,15 @@ model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.25; v(0)=-65;',...
     'fast_offset=0; Koffset=fast_offset; Noffset=fast_offset;',...     % 'fast_denom=1; gKDR=5/fast_denom; gNa=12.5/fast_denom;',...
     'I(t)=I_app*((t/ton)*(t<=ton)+(ton<t&t<toff)+rand*.1);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
     sprintf('ton=500; toff=%g; I_app=%g;', tspan, I_app),... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms
-    'monitor functions; monitor v.spikes(0)'];
+    'monitor functions; monitor v.spikes(-25)'];
 
 if ~isempty(varargin)
     
     % if strcmp(version('-release'), '2012a')
     
-        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell, 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'vary', vary_cell,...
+            'parallel_flag', 0, 'verbose_flag', 0, 'solver', 'euler',...
+            'study_dir', ['Figures/', name]);
     
     % else
     % 
@@ -66,7 +68,9 @@ else
     
     % if strcmp(version('-release'), '2012a')
     
-        data = dsSimulate(model_eqns, 'tspan', [0 tspan], 'parallel_flag', 1, 'downsample_factor', 25, 'verbose_flag', 0);
+        data = dsSimulate(model_eqns, 'tspan', [0 tspan],...
+            'verbose_flag', 0, 'solver', 'euler',...
+            'study_dir', ['Figures/', name]);
     
     % else
     % 
@@ -80,19 +84,19 @@ try
     
     dsPlot(data)
 
-    if no_figures > 1
-        
-        for f = 1:no_figures
-            
-            save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)], '-v7.3')
-            
-        end
-        
-    else
+    % if no_figures > 1
+    % 
+    %     for f = 1:no_figures
+    % 
+    %         save_as_pdf(f, ['Figures/', name, sprintf('_%g', f)], '-v7.3')
+    % 
+    %     end
+    % 
+    % else
     
         save_as_pdf(gcf, ['Figures/', name], '-v7.3')
 
-    end
+    % end
     
 catch error
     
@@ -104,6 +108,6 @@ end
 
 if save_flag
     
-    save([name, '.mat'], 'data', '-v7.3')
+    save(['Figures/', name, '.mat'], 'data', '-v7.3')
     
 end

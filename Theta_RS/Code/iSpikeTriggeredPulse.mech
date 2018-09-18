@@ -24,7 +24,7 @@ s2 = getPulseFast(STPwidth,STPshift,Tend+STPonset,dt,0,STPoffset,Npop,STPkernelT
 % Functions
 spikeIndicator(t) = abs(t-tspike(1,:)-dt)<=.5*dt | abs(t-tspike(2,:)-dt)<=.5*dt
 dsNdt(t) = double((t>=STPonset)&spikeIndicator(t))./(dt)
-firstSpikeIndicator(t) = spikeNumber == 0
+firstSpikeIndicator(t) = spikeNumber < 1
 % (spikeNumber>0)&(spikeNumber<=.5)
 dtSTdt(t) = double((t>=STPonset)&firstSpikeIndicator(t)&spikeIndicator(t)).*max(tspike)./(dt)
 pulseIndex(t) = int64(max((t-triggeringSpikeTime+1),1)./dt)
