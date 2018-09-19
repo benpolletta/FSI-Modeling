@@ -1,0 +1,14 @@
+% ileak: HH leak current
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters
+gl=1;    % mS/cm^2
+El=-70;
+%El_noise = 500;
+%El = El + El_noise*randn(1,Npop); % mV
+%El = -67 + 500*randn(1,Npop); % mV
+
+% Functions
+Ileak(IN) = gl.*(IN-El)
+
+% Interface
+@current += -Ileak(IN)
