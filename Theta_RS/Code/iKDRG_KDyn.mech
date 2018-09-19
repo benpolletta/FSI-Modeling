@@ -4,10 +4,10 @@
 % Parameters
 gKDR = 5 %/3
 gdenomK = 1
-% E_KDR = -80
+% EKDR = -80
 ki = 140
-tau_m = (3^((temp-22)/10)); temp = 34 % 1
-IC=0; IC_noise=0
+taum = (3^((temp-22)/10)); temp = 34 % 1
+IC=0; ICnoise=0
 Koffset = 0
 
 % Functions
@@ -17,8 +17,8 @@ IKDR(X,mKDR) = (gKDR/gdenomK).*mKDR.^4.*(X-EKDR(@ko))
 EKDR(@ko) = 25*log(@ko/ki)
 
 % ODEs
-mKDR' = tau_m*(aM(X).*(1-mKDR)-bM(X).*mKDR)
-mKDR(0) = IC+IC_noise.*rand(Npop,1)
+mKDR' = taum*(aM(X).*(1-mKDR)-bM(X).*mKDR)
+mKDR(0) = IC+ICnoise.*rand(Npop,1)
 
 % Interface
 @current += -IKDR(X,mKDR)

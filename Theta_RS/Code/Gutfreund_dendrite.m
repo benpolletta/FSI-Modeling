@@ -31,7 +31,7 @@ s.populations(2).size=1;
 s.populations(2).equations=eqns;
 s.populations(2).mechanism_list={'iNaG','iKDRG','gleak','iNaP','iKs'};
 s.populations(2).parameters={'gNaP',0.025,'gKs',0.084,...
-    'gdenomK',d_num,'gdenomN',d_num,'gdenoml',d_num}; % ,'tau_h',7,'tau_m',7,'Noffset',0,'Koffset',0};
+    'gdenomK',d_num,'gdenomN',d_num,'gdenoml',d_num}; % ,'tauh',7,'taum',7,'Noffset',0,'Koffset',0};
 s.connections(1).direction='soma->dendrite';
 s.connections(1).mechanism_list={'iCOM'};
 s.connections(1).parameters={'gCOM',gcom};

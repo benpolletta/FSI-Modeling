@@ -1,4 +1,4 @@
-function [data, name] = Gutfreund_Cap(I_const, tspan, save_flag, gKs_in, gCa_in, gKCa_in, varargin)
+function [data, name] = Gutfreund_Cap(Iconst, tspan, save_flag, gKs_in, gCa_in, gKCa_in, varargin)
 
 % Set tau_fast = 7, look at I_app = 2.5, ..., 3.5 to see transition from
 % subthreshold oscillations to intermittent spiking to continuous spiking.
@@ -62,14 +62,14 @@ end
 
 ton = 500;
 
-model_eqns = ['dv/dt=(I_const+I(t)+@current)/Cm; Cm=.9; v(0)=-65;',... % +I(t)
+model_eqns = ['dv/dt=(Iconst+I(t)+@current)/Cm; Cm=.9; v(0)=-65;',... % +I(t)
     '{iNaP,iKs,iKDRG,iNaG,gleak,CaDynT,iCaT,iKCaT};',...
-    sprintf('I_const=%g;', I_const),...    %  halfKs=-60; halfNaP=-60; 
+    sprintf('Iconst=%g;', Iconst),...    %  halfKs=-60; halfNaP=-60; 
     sprintf( 'C_mult=Cm/.25; gKs=C_mult*%g; gCa=C_mult*%g; gKCa=C_mult*%g;', gKs_in, gCa_in, gKCa_in),...
     'gNaP_denom=3.36; gNaP=gKs/gNaP_denom;',...
-    'gl=C_mult*0.025; CAF=24/C_mult; bKCa = .002;',... % C_mult*ones(1, 3)),... %%% 'tau_fast=5; tau_h=tau_fast; tau_m=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
+    'gl=C_mult*0.025; CAF=24/C_mult; bKCa = .002;',... % C_mult*ones(1, 3)),... %%% 'tau_fast=5; tauh=tau_fast; taum=tau_fast;',... %'slow_offset=0; halfKs=slow_offset; halfNaP=slow_offset;',... %%% 'offset=0; Koffset=offset; Noffset=offset;',...     % 
     'fast_denom=1; gKDR=C_mult*5/fast_denom; gNa=C_mult*12.5/fast_denom;',... % C_mult*ones(1, 2)),...
-    'tau_fast = 5; tau_m = tau_fast; tau_h = tau_fast; I_app = 0;',...
+    'tau_fast = 5; taum = tau_fast; tauh = tau_fast; I_app = 0;',...
     sprintf('ton=%g; toff=%g;', ton, tspan),... %  (ton<t&t<toff) %%% 'PPstim = 0; PPfreq = 1.5; PPwidth = floor((1000/PPfreq)/4); PPshift = 0; ap_pulse_num = 0; kernel_type = 7;',... % in ms % 
     'noise=0; I(t)=C_mult*I_app*((t/ton)*(t<=ton)+(ton<t&t<toff))*(1+rand*noise);',... % *((1-pulse/2)+pulse*(mod(t,750)<250&t>2*ton));',...
     'monitor functions'];

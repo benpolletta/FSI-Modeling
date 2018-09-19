@@ -22,7 +22,7 @@ subplot(313)
 
 plot(v', [iNaF_ht; FSiKDR_mtau]');
 
-legend({'Na \tau_h', 'K \tau_m'}, 'Location', 'NW', 'FontSize', 12)
+legend({'Na \tauh', 'K \taum'}, 'Location', 'NW', 'FontSize', 12)
 
 title('Time Constants')
 

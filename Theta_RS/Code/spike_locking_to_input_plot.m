@@ -1,4 +1,4 @@
-function results = spike_locking_to_input_plot(data, results, name, varargin)
+function results = spikElocking_to_input_plot(data, results, name, varargin)
 
 v_pop = 'pop1'; i_pop = 'pop1'; label = '';
 
@@ -142,7 +142,7 @@ end
 %     
 % end
 
-figure_labels = cell(no_figures, 1);
+figurElabels = cell(no_figures, 1);
 
 nonempty_plots = zeros(no_rows, no_cols, no_figures);
 
@@ -152,7 +152,7 @@ for f = 1:no_figures
     
     figure_index = ones(1, length(data));
     
-    figure_labels{f} = 'Spike Locking to Input';
+    figurElabels{f} = 'Spike Locking to Input';
     
     for v = 1:no_varied
        
@@ -160,11 +160,11 @@ for f = 1:no_figures
         
         if v == 1
         
-            figure_labels{f} = [vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
+            figurElabels{f} = [vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
             
         else
         
-            figure_labels{f} = [figure_labels{f}, '; ', vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
+            figurElabels{f} = [figurElabels{f}, '; ', vary_labels{v + 2}, ' = ', num2str(figure_params(f, v), '%.3g')];
             
         end
         
@@ -277,7 +277,7 @@ for f = 1:no_figures
         
     end
     
-    mtit(gcf, figure_labels{f}, 'FontSize', 16)
+    mtit(gcf, figurElabels{f}, 'FontSize', 16)
 
     if no_figures > 1
     
@@ -337,7 +337,7 @@ for f = 1:no_figures
     
     ylabel('Spike PLV', 'FontSize', 14)
     
-    legend(figure_labels)
+    legend(figurElabels)
     
     subplot(3, 1, 2)
     

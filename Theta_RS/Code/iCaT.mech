@@ -3,7 +3,7 @@
 % Parameters
 gCa=.02 % .9*.02/.25
 ECa=120
-IC_noise=0
+ICnoise=0
 Caoffset=0
 
 % Functions
@@ -15,7 +15,7 @@ ICa(X) = gCa.*(s.^2).*(X-ECa)
 
 % ODEs & ICs
 s' = (sinf(X)-s)./stau(X) % s' = as(X).*(1-X)-bs(X).*X % 
-s(0) = as(-65)/(as(-65)+bs(-65))+IC_noise.*rand(1,Npop)
+s(0) = as(-65)/(as(-65)+bs(-65))+ICnoise.*rand(1,Npop)
 
 % Linkers
 @current += -ICa(X)

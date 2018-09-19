@@ -1,4 +1,4 @@
-function data = Gutfreund_fake_dendrite(I_const, I_app, varargin)
+function data = Gutfreund_fake_dendrite(Iconst, I_app, varargin)
 
 vary_label = ''; vary_cell = cell(length(varargin)/2, 3);
 
@@ -14,10 +14,10 @@ if ~isempty(varargin)
     
 end
 
-model_eqns = ['dv/dt=I_const+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
-    sprintf('{iNaP,iKs,iKDRG,iNaG,gleak,faux_Gutfreund_dendrite}; halfKs=-35; halfNaP=-50; gNaP=0.025; I_const=%f;', I_const),...
+model_eqns = ['dv/dt=Iconst+I(t)+@current/Cm; Cm=.25; v(0)=-65;',...
+    sprintf('{iNaP,iKs,iKDRG,iNaG,gleak,faux_Gutfreund_dendrite}; halfKs=-35; halfNaP=-50; gNaP=0.025; Iconst=%f;', Iconst),...
     'offset=0; Koffset=offset; Noffset=offset; gdenom=1; gKDR=5/gdenom; gNa=12.5/gdenom; gl=0;',... % gdenom=3; gKDR=5/gdenom; gNa=12.5/gdenom; gl=0;'
-    'tau_fast=7; tau_h=tau_fast; tau_m=tau_fast;',...
+    'tau_fast=7; tauh=tau_fast; taum=tau_fast;',...
     sprintf('I(t)=I_app*(ton<t&t<toff)*(1+rand*.25); ton=500; toff=3500; I_app=%f;', I_app),...
     'monitor functions'];
 
@@ -35,7 +35,7 @@ try
     
     PlotData(data)
 
-    save_as_pdf(gcf, [sprintf('gutfreund_fd_Iconst%f_Iapp%f_', I_const, I_app), vary_label])
+    save_as_pdf(gcf, [sprintf('gutfreund_fd_Iconst%f_Iapp%f_', Iconst, I_app), vary_label])
 
 catch error
     

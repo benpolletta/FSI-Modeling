@@ -4,9 +4,9 @@
 % Parameters
 gKs=.084; E_Ks=-80;
 halfKs = -35; temp=34
-IC=0; IC_noise=0
+IC=0; ICnoise=0
 tau_div = 3^((34-22)/10)
-tau_mult = 1
+taumult = 1
 tauKs = 15
 
 % Functions
@@ -15,7 +15,7 @@ IKs(X,n)=gKs.*n.*(X-E_Ks)
 
 % ODEs
 n'=(ninf(X)-n)/tauKs
-n(0)=IC+IC_noise.*rand(Npop,1)
+n(0)=IC+ICnoise.*rand(Npop,1)
 
 % Interface
 @current += -IKs(X,n)

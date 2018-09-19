@@ -24,7 +24,7 @@ subplot(312)
 
 legend(h1, {'Gutfreund''s m^3h', 'Dave''s m^3h'}, 'Location', 'E', 'FontSize', 12)
 
-legend(h2, {'Gutfreund''s \tau_h', 'Dave''s \tau_h'}, 'Location', 'W', 'FontSize', 12)
+legend(h2, {'Gutfreund''s \tauh', 'Dave''s \tauh'}, 'Location', 'W', 'FontSize', 12)
 
 subplot(313)
 
@@ -32,7 +32,7 @@ subplot(313)
 
 legend(h1, {'Gutfreund''s m^3h - Dave''s m^3h'}, 'Location', 'NW', 'FontSize', 12)
 
-legend(h2, {'Gutfreund''s \tau_h - Dave''s \tau_h'}, 'Location', 'SE', 'FontSize', 12)
+legend(h2, {'Gutfreund''s \tauh - Dave''s \tauh'}, 'Location', 'SE', 'FontSize', 12)
 
 xlabel('Voltage (mV)', 'FontSize', 14)
 

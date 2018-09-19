@@ -13,7 +13,7 @@ IKCa(X,q,@ko) = gKCa*q*(X-EK(@ko))
 
 % ODEs
 q' = (infKCa(@cai)-q)./tauKCa(@cai)
-q(0) = infKCa(.05)+IC_noise.*rand(1,Npop)
+q(0) = infKCa(.05)+ICnoise.*rand(1,Npop)
 
 % Linkers
 @current += IKCa(X,q,@ko)

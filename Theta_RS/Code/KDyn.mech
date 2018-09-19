@@ -7,11 +7,11 @@ KAF = 2  	 % potassium accumulation factor
 VshellK=250;  	 % volume of shell for k+ diffusion
 faraday=96485 	 % ms*A/mmol, Faraday constant
 % note: small tauK -> ko follows @ik with minimal k+ accumulation
-IC_noise=0
+ICnoise=0
 
 % ODEs
 ko' = KAF.*@ik./(faraday*VshellK)+(koinf-ko)./tauK
-ko(0) = koinf+IC_noise.*rand(1,Npop)
+ko(0) = koinf+ICnoise.*rand(1,Npop)
 
 % Interface
 @ko += ko

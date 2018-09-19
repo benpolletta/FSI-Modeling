@@ -3,8 +3,8 @@
 gNa = 12.5 %/3
 gdenomN = 1
 ENa = 40
-tau_h = (3^((temp-6.3)/10)); temp = 22; % 34 % 1
-IC=0; IC_noise=0
+tauh = (3^((temp-6.3)/10)); temp = 22; % 34 % 1
+IC=0; ICnoise=0
 Noffset = 0
 
 % Functions
@@ -16,8 +16,8 @@ bh(X) = 1./(exp(-(X-Noffset)/10)+1)
 INa(X,h) = (gNa/gdenomN)*(minf(X).^3).*h.*(X-ENa)
 
 % ODEs & ICs
-h' = tau_h*(ah(X).*(1-h)-bh(X).*h)
-h(0) = IC+IC_noise.*rand(Npop,1)
+h' = tauh*(ah(X).*(1-h)-bh(X).*h)
+h(0) = IC+ICnoise.*rand(Npop,1)
 
 % Linkers
 @current += -INa(X,h)

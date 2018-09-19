@@ -19,12 +19,12 @@ shifts = unique(shift);
 % rands = unique(rand);
 
 following_spike_times = [results.following_spike_times]';
-cycle_lengths = following_spike_times - repmat([results.triggering_spike_time]', 1, 2);
-baseline_cycle_lengths = diag(nanmean(cycle_lengths(stim == 0, :)));
-baseline_cycle_mat = ones(size(cycle_lengths))*baseline_cycle_lengths;
-phase_advances = -(cycle_lengths - baseline_cycle_mat); % ./baseline_cycle_mat;
+cyclElengths = following_spike_times - repmat([results.triggering_spike_time]', 1, 2);
+baseline_cyclElengths = diag(nanmean(cyclElengths(stim == 0, :)));
+baseline_cycle_mat = ones(size(cyclElengths))*baseline_cyclElengths;
+phase_advances = -(cyclElengths - baseline_cycle_mat); % ./baseline_cycle_mat;
 
-phase_shifts = repmat(shifts, 1, 2); % *diag(1./diag(baseline_cycle_lengths));
+phase_shifts = repmat(shifts, 1, 2); % *diag(1./diag(baseline_cyclElengths));
 
 phase_advances = reshape(phase_advances, length(stims), length(phase_shifts), 2);
 
@@ -43,11 +43,11 @@ legend(fliplr(stim_labels))
 
 axis tight
 box off
-xlim([0 baseline_cycle_lengths(1)])
+xlim([0 baseline_cyclElengths(1)])
 set(gca, 'FontSize', 16)
 xlabel('Input Pulse Delay (ms)') % 'Phase of Input Pulse (2\pi)')
 ylabel('Spike Time Advance (ms)') % 'Spike Phase Change (2\pi)')
-title(sprintf('Phase Response Curves, First Spike, Period = %g', baseline_cycle_lengths(1,1)))
+title(sprintf('Phase Response Curves, First Spike, Period = %g', baseline_cyclElengths(1,1)))
 
 subplot(122)
 
@@ -55,7 +55,7 @@ plot(phase_shifts(:, 2), phase_advances(:, :, 2)) % boundedline(phase_shifts, me
 
 hold on
 
-plot(repmat(baseline_cycle_lengths(1), 2, 1), ylim', 'k:', 'LineWidth', 2)
+plot(repmat(baseline_cyclElengths(1), 2, 1), ylim', 'k:', 'LineWidth', 2)
 
 my_legend = fliplr(stim_labels);
 my_legend{end + 1} = 'Time of 1st Spike';
@@ -66,6 +66,6 @@ box off
 set(gca, 'FontSize', 16)
 xlabel('Input Pulse Delay (ms)') % 'Phase of Input Pulse (2\pi)')
 ylabel('Spike Time Advance (ms)') % 'Spike Phase Change (2\pi)')
-title(sprintf('Phase Response Curves, Second Spike, Period = %g', baseline_cycle_lengths(2,2)))
+title(sprintf('Phase Response Curves, Second Spike, Period = %g', baseline_cyclElengths(2,2)))
 
 save_as_pdf(gcf, [name, '_PRC'])

@@ -4,19 +4,19 @@
 % Parameters
 gKs=.084; E_Ks=-80;
 halfKs = -35; temp = 34; % 22; %
-IC=0; IC_noise=0
+IC=0; ICnoise=0
 tau_div = 3^((temp-22)/10)
-tau_mult = 1
+taumult = 1
 Ks_offset = 0
 
 % Functions
 ninf(X)=1./(1+exp(-(X-(halfKs+Ks_offset))/10))
-tauKs(X)=tau_mult*1000./(3.3*tau_div*(exp((X-(halfKs+Ks_offset))/40)+exp(-(X-(halfKs+Ks_offset))/20)))
+tauKs(X)=taumult*1000./(3.3*tau_div*(exp((X-(halfKs+Ks_offset))/40)+exp(-(X-(halfKs+Ks_offset))/20)))
 IKs(X,n)=gKs.*n.*(X-E_Ks)
 
 % ODEs
 n'=(ninf(X)-n)/tauKs(X)
-n(0)=IC+IC_noise.*rand(Npop,1)
+n(0)=IC+ICnoise.*rand(Npop,1)
 
 % Interface
 @current += -IKs(X,n)

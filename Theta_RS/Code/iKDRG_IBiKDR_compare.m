@@ -16,7 +16,7 @@ title('Potassium Activation Curves', 'FontSize', 16)
 
 legend(h1, {'Gutfreund''s m_{\infty}^4', 'Dave''s m_{\infty}^4'}, 'Location', 'E', 'FontSize', 12)
 
-legend(h2, {'Gutfreund''s \tau_m', 'Dave''s \tau_m'}, 'Location', 'W', 'FontSize', 12)
+legend(h2, {'Gutfreund''s \taum', 'Dave''s \taum'}, 'Location', 'W', 'FontSize', 12)
 
 subplot(212)
 
@@ -24,7 +24,7 @@ subplot(212)
 
 legend(h1, {'Gutfreund''s m_{\infty}^4 - Dave''s m_{\infty}^4'}, 'Location', 'SE', 'FontSize', 12)
 
-legend(h2, {'Gutfreund''s \tau_m - Dave''s \tau_m'}, 'Location', 'W', 'FontSize', 12)
+legend(h2, {'Gutfreund''s \taum - Dave''s \taum'}, 'Location', 'W', 'FontSize', 12)
 
 xlabel('Voltage (mV)', 'FontSize', 14)
 

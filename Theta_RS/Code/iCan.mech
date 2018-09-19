@@ -3,7 +3,7 @@ gCan=.025
 ECan=-20
 alphacan=.0056
 betacan=.002
-IC=.1; IC_noise=0
+IC=.1; ICnoise=0
 
 % functions
 minf(cai)=alphacan*cai./(alphacan*cai+betacan)
@@ -12,7 +12,7 @@ I(X,m)=gCan.*m.^2.*(X-ECan)
 
 % ODEs and ICs
 m' = (minf(@cai)-m)./mtau(@cai)
-m(0)=IC+IC_noise*rand(1,Npop)
+m(0)=IC+ICnoise*rand(1,Npop)
 
 % linkers
 @current += -I(X,m)
